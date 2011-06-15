@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.praqma</groupId>
+	<artifactId>ccanalyzer</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>MonKit</name>
+	<url>http://maven.apache.org</url>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>praqma</id>
+			<name>praqma</name>
+			<url>scp://10.10.1.25:/var/www/repo/maven</url>
+		</repository>
+	</distributionManagement>
+
+	<build>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<!-- <show>private</show> -->
+					<nohelp>true</nohelp>
+				</configuration>
+			</plugin>
+			
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>single</goal> <!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+    			
+		</plugins>
+
+	</build>
+	
+
+	<reporting>
+		<plugins>
+		</plugins>
+	</reporting>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.praqma</groupId>
+			<artifactId>COOL</artifactId>
+			<version>0.3.25-SNAPSHOT</version>
+		</dependency>
+		
+        <dependency>
+            <groupId>net.praqma</groupId>
+            <artifactId>praqmajutils</artifactId>
+            <version>0.1.8</version>
+        </dependency>
+		
+        <dependency>
+            <groupId>net.praqma</groupId>
+            <artifactId>monkit</artifactId>
+            <version>0.1.7</version>
+        </dependency>
+	</dependencies>
+
+	<repositories>
+
+	</repositories>
+
+	<scm>
+		<connection>scm:git:ssh://github.com/Praqma/CCAnalyzer.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/Praqma/CCAnalyzer.git</developerConnection>
+		<url>https://github.com/Praqma/CCAnalyzer.git</url>
+	</scm>
+
+</project>
