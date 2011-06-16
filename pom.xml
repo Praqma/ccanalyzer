@@ -100,10 +100,6 @@
         </dependency>
 	</dependencies>
 
-	<repositories>
-
-	</repositories>
-
 	<scm>
 		<connection>scm:git:ssh://github.com/Praqma/CCAnalyzer.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/Praqma/CCAnalyzer.git</developerConnection>
