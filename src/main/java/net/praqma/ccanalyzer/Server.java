@@ -15,6 +15,7 @@ public class Server {
     public static int port = 4444;
     private int counter = 0;
     public static int version = 1;
+    public static String textualVersion = "0.1.0";
     
     private static Pattern rx_version = Pattern.compile("^version (\\d+)");
 
@@ -36,7 +37,7 @@ public class Server {
 
 	    while (true) {
 		server = listener.accept();
-		System.out.println("Accepted client");
+		System.out.println("Accepted client from " + server);
 		T connection = new T(server);
 		Thread t = new Thread(connection);
 		t.start();
@@ -47,7 +48,7 @@ public class Server {
 	    System.err.println("Something went wrong: " + e);
 	}
 
-	System.out.println("OUT.");
+	System.out.println("Server is stopping.");
     }
 
     public class T implements Runnable {
@@ -103,11 +104,11 @@ public class Server {
 		    request.clear();
 		    while ((line = in.readLine()) != null && !line.equals(".")) {
 			if (line.equalsIgnoreCase("exit")) {
-			    System.out.println("Breaking....");
+			    System.out.println("Client quitting");
 			    running = false;
 			    break;
 			}
-			System.out.println("LINE: " + line);
+
 			request.add(line);
 		    }
 		    
@@ -131,10 +132,9 @@ public class Server {
 		    in.close();
 		    out.close();
 		} catch (IOException e) {
+		    /* No op */
 		}
 	    }
-
-	    System.out.println("THREAD DONE!");
 	}
 
     }

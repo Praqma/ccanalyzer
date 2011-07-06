@@ -140,9 +140,11 @@ public class PerformanceCounterMeter {
      */
     public static List<String> get( String performanceString, int numberOfSamples, int timeInterval ) {
 	String cmd = prog + " -si " + timeInterval + " -sc " + numberOfSamples + " \"" + performanceString + "\"";
-	System.out.println( "--->" + cmd );
+	System.out.print( " " + cmd );
 	try {
 	    CmdResult result = CommandLine.getInstance().run( cmd );
+	    
+	    System.out.println( "\r $" + cmd );
 	    
 	    List<String> list = new ArrayList<String>();
 	    boolean first = true;

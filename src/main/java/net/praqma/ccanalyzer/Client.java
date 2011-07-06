@@ -9,18 +9,54 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import net.praqma.clearcase.Cool;
+import net.praqma.clearcase.Cool.ContextType;
 import net.praqma.monkit.MonKit;
+import net.praqma.util.debug.PraqmaLogger;
+import net.praqma.util.debug.PraqmaLogger.Logger;
+import net.praqma.util.option.Option;
+import net.praqma.util.option.Options;
 
 public class Client {
     
-    public static void main( String[] args ) throws IOException {
+    public static void main2( String[] args ) throws IOException {
 	Client c = new Client();
-	//List<PerformanceCounter> pc = new ArrayList<PerformanceCounter>();
-	//pc.add(new PerformanceCounter("\\Processor(_Total)\\% privileged time",10,1) );
 	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
 	MonKit mk = new MonKit();
 	c.start("", "Wolles", cr.getCounters(), mk);
-	c.start("", "Praqma", cr.getCounters(), mk);
+	mk.save();
+    }
+    
+    public static void main(String[] args) throws IOException {
+	
+	Options o = new Options( Server.textualVersion );
+	
+	Option ohost = new Option( "host", "H", true, 1, "The host name/IP" );
+	Option oname   = new Option( "name", "n", true, 1, "The name/title" );
+	
+	o.setOption( ohost );
+	o.setOption( oname );
+	
+	o.setDefaultOptions();
+	
+	o.setSyntax( "" );
+	o.setHeader( "" );
+	o.setDescription( "" );
+	
+	o.parse( args );
+	
+	try {
+	    o.checkOptions();
+	} catch (Exception e) {
+	    System.err.println("Incorrect option: " + e.getMessage());
+	    o.display();
+	    System.exit(1);
+	}
+	
+	Client c = new Client();
+	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
+	MonKit mk = new MonKit();
+	c.start(ohost.getString(), oname.getString(), cr.getCounters(), mk);
 	mk.save();
     }
 
@@ -67,7 +103,7 @@ public class Client {
 		break;
 	    }
 
-	    System.out.println("Result: " + line);
+	    System.out.println(pc.name + ": " + line + " " + pc.scale);
 	    
 	    mk.addCategory(pc.name, pc.scale);
 	    

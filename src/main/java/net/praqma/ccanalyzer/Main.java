@@ -1,14 +1,9 @@
 package net.praqma.ccanalyzer;
 
 import java.io.IOException;
-import java.util.List;
 
 import net.praqma.clearcase.Cool;
 import net.praqma.clearcase.Cool.ContextType;
-import net.praqma.clearcase.ucm.view.UCMView;
-import net.praqma.clearcase.Region;
-import net.praqma.clearcase.Site;
-import net.praqma.clearcase.Vob;
 import net.praqma.monkit.MonKit;
 import net.praqma.util.debug.PraqmaLogger;
 import net.praqma.util.debug.PraqmaLogger.Logger;
