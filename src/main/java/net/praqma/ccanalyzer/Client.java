@@ -15,13 +15,13 @@ public class Client {
     }
 
     public void start( String host ) throws IOException {
-        Socket echoSocket = null;
+        Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
 
         try {
-            echoSocket = new Socket(host, 4444);
-            out = new PrintWriter(echoSocket.getOutputStream(), true);
+            socket = new Socket(host, Server.port);
+            out = new PrintWriter(socket.getOutputStream(), true);
             
         } catch (UnknownHostException e) {
             System.err.println( "Unkown host " + host );
@@ -32,12 +32,13 @@ public class Client {
         }
         
         /* Write first */
-        out.println("HEJ");
+        out.println(PerformanceCounter.RequestType.SHORT_HAND_COUNTER.toString());
+        out.println("BLA");
         out.println(".");
 
-        in = new BufferedReader(new InputStreamReader( echoSocket.getInputStream() ) );
+        in = new BufferedReader(new InputStreamReader( socket.getInputStream() ) );
         
-        String line = in.readLine();
+        String line = "";
         
 	while( ( line = in.readLine()) != null ) {
 	    out.println("I got:" + line);
@@ -49,6 +50,6 @@ public class Client {
 	out.close();
 	in.close();
 	
-	echoSocket.close();
+	socket.close();
     }
 }

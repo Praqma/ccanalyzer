@@ -16,6 +16,31 @@ public class PerformanceCounter {
     
     private static Pattern rx_ = Pattern.compile( "^\\\"(.*?)\\\",\\\"(.*?)\\\"$" );
     
+    public enum RequestType {
+	NAMED_COUNTER,
+	SHORT_HAND_COUNTER
+    }
+    
+    public static String parseRequest( List<String> request ) {
+	RequestType type = RequestType.valueOf(request.get(0));
+	
+	switch( type ) {
+	case NAMED_COUNTER:
+	    List<String> r = get(request.get(1));
+	    if( r.size() > 0 ) {
+		return r.get(0);
+	    }
+	    break;
+	    
+	case SHORT_HAND_COUNTER:
+	    return getDiskUsage("C:") + "";
+	    
+	    
+	}
+	
+	return null;
+    }
+    
     /**
      * For a specific performance counter string, get the values for the class given number of samples and interval
      * @param performanceString

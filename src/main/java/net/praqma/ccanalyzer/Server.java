@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
     public static int port = 4444;
@@ -53,20 +55,24 @@ public class Server {
 	}
 
 	public void run() {
-	    String line, input = "";
+	    String line;
+	    List<String> request = new ArrayList<String>();
+	    
 	    try {
 		// Get input from the client
-		PrintWriter out = new PrintWriter(server.getOutputStream());
+		PrintWriter out = new PrintWriter(server.getOutputStream(), true);
 		BufferedReader br = new BufferedReader(	new InputStreamReader( server.getInputStream() ));
 		while ((line = br.readLine()) != null && !line.equals(".")) {
-		    input = input + line;
+		    request.add(line);
 		}
-		// Now write to the client
-
-		out.println("--->Overall message is:" + input);
 		
-		
+		/* Parse request */
+		String r = PerformanceCounter.parseRequest(request);
 
+		/* Reply */
+		out.println(r);
+		//out.println("--->Overall message is:" + input);
+		
 		server.close();
 	    } catch (IOException ioe) {
 		System.out.println("IOException on socket listen: " + ioe);
