@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.praqma</groupId>
 	<artifactId>ccanalyzer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>MonKit</name>
 	<url>http://maven.apache.org</url>
 	
@@ -97,6 +97,12 @@
             <groupId>net.praqma</groupId>
             <artifactId>monkit</artifactId>
             <version>0.1.7</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.praqma</groupId>
+            <artifactId>praqmajutils</artifactId>
+            <version>0.1.9-SNAPSHOT</version>
         </dependency>
 	</dependencies>
 

@@ -23,11 +23,13 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
 	
-	Options o = new Options( "0.0.1" );
+	Options o = new Options( "0.0.2" );
 	
 	Option oregion = new Option( "region", "r", true, -1, "The region" );
+	Option oconf   = new Option( "configuration", "c", false, 1, "A given configuration file" );
 	
 	o.setOption( oregion );
+	o.setOption( oconf );
 	
 	o.setDefaultOptions();
 	
@@ -37,15 +39,12 @@ public class Main {
 	
 	o.parse( args );
 	
-	try
-	{
-		o.checkOptions();
-	}
-	catch ( Exception e )
-	{
-		System.err.println( "Incorrect option: " + e.getMessage() );
-		o.display();
-		System.exit( 1 );
+	try {
+	    o.checkOptions();
+	} catch (Exception e) {
+	    System.err.println("Incorrect option: " + e.getMessage());
+	    o.display();
+	    System.exit(1);
 	}
 	
 	Cool.setContext(ContextType.CLEARTOOL);
