@@ -31,21 +31,53 @@ public class Client {
             System.exit(1);
         }
         
-        /* Write first */
-        out.println(PerformanceCounter.RequestType.SHORT_HAND_COUNTER.toString());
-        out.println("BLA");
-        out.println(".");
-
         in = new BufferedReader(new InputStreamReader( socket.getInputStream() ) );
         
         String line = "";
         
+        /* Write first */
+        /*
+        out.println(PerformanceCounter.RequestType.SHORT_HAND_COUNTER.toString());
+        out.println("getFreeSpace");
+        out.println("C:");
+        out.println(".");
+
 	while( ( line = in.readLine()) != null ) {
-	    out.println("I got:" + line);
 	    break;
 	}
         
         System.out.println( "Result: " + line );
+        */
+        
+        /*
+        out.println(PerformanceCounter.RequestType.SHORT_HAND_COUNTER.toString());
+        out.println("getPagesPerSecond");
+        out.println("1");
+        out.println("1");
+        out.println(".");
+
+	while( ( line = in.readLine()) != null ) {
+	    break;
+	}
+        
+        System.out.println( "Result: " + line );
+        */
+        
+        
+        out.println(PerformanceCounter.RequestType.NAMED_COUNTER.toString());
+        out.println("\\Processor(_Total)\\% privileged time");
+        out.println("10");
+        out.println("1");
+        out.println(".");
+
+	while( ( line = in.readLine()) != null ) {
+	    break;
+	}
+        
+        System.out.println( "Result: " + line );
+        
+	
+	out.println("exit");
 
 	out.close();
 	in.close();
