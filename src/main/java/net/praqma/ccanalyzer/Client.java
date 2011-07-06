@@ -7,20 +7,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
+
+import net.praqma.monkit.MonKit;
 
 public class Client {
     
     public static void main( String[] args ) throws IOException {
 	Client c = new Client();
-	List<PerformanceCounter> pc = new ArrayList<PerformanceCounter>();
+	//List<PerformanceCounter> pc = new ArrayList<PerformanceCounter>();
 	//pc.add(new PerformanceCounter("\\Processor(_Total)\\% privileged time",10,1) );
 	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
-	c.start("", cr.getCounters());
+	MonKit mk = new MonKit();
+	c.start("", "Wolles", cr.getCounters(), mk);
+	c.start("", "Praqma", cr.getCounters(), mk);
+	mk.save();
     }
 
-    public void start( String host, List<PerformanceCounter> counters ) throws IOException {
+    public void start( String host, String clientName, List<PerformanceCounter> counters, MonKit mk ) throws IOException {
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
@@ -37,40 +41,20 @@ public class Client {
             System.exit(1);
         }
         
-        
-        out.println("version " + Server.version );
-        
         in = new BufferedReader(new InputStreamReader( socket.getInputStream() ) );
         
         String line = "";
         
-        /* Write first */
-        /*
-        out.println(PerformanceCounter.RequestType.SHORT_HAND_COUNTER.toString());
-        out.println("getFreeSpace");
-        out.println("C:");
-        out.println(".");
-
-	while( ( line = in.readLine()) != null ) {
+        /* Super simple handshaking.... */
+        out.println("version " + Server.version );
+	while((line = in.readLine()) != null) {
 	    break;
 	}
-        
-        System.out.println( "Result: " + line );
-        */
-        
-        /*
-        out.println(PerformanceCounter.RequestType.SHORT_HAND_COUNTER.toString());
-        out.println("getPagesPerSecond");
-        out.println("1");
-        out.println("1");
-        out.println(".");
+        if( line.equals("0") ) {
+            System.err.println("Version mismatch!");
+            throw new PerformanceCounterException("Version mismatch");
+        }
 
-	while( ( line = in.readLine()) != null ) {
-	    break;
-	}
-        
-        System.out.println( "Result: " + line );
-        */
         
         for( PerformanceCounter pc : counters ) {
 	    out.println(PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString());
@@ -84,6 +68,10 @@ public class Client {
 	    }
 
 	    System.out.println("Result: " + line);
+	    
+	    mk.addCategory(pc.name, pc.scale);
+	    
+	    mk.add(clientName, line, pc.name);
         }
         
 	

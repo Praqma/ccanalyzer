@@ -93,8 +93,10 @@ public class Server {
 		
 		if( !getVersion() ) {
 		    System.err.println("Client version mismatch");
+		    out.println(0);
 		    return;
 		}
+		out.println(1);
 		
 		boolean running = true;
 		while (running) {

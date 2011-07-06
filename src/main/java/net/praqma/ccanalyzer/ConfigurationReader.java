@@ -19,6 +19,8 @@ public class ConfigurationReader extends XML {
 	List<Element> elements = getElements();
 	
 	for( Element e : elements ) {
+	    String name = e.getAttribute("name");
+	    String scale = e.getAttribute("scale");
 	    String counter = e.getTextContent();
 	    
 	    String samples = e.getAttribute("samples");
@@ -33,7 +35,7 @@ public class ConfigurationReader extends XML {
 		i = Integer.parseInt(interval);
 	    }
 	    
-	    counters.add(new PerformanceCounter(counter, ns, i));
+	    counters.add(new PerformanceCounter(name, scale, counter, ns, i));
 	}
     }
     
