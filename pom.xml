@@ -98,12 +98,6 @@
             <artifactId>monkit</artifactId>
             <version>0.1.7</version>
         </dependency>
-        
-        <dependency>
-            <groupId>net.praqma</groupId>
-            <artifactId>praqmajutils</artifactId>
-            <version>0.1.8</version>
-        </dependency>
 	</dependencies>
 
 	<scm>

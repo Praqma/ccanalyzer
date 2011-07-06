@@ -31,8 +31,8 @@ public class Client {
 	
 	Options o = new Options( Server.textualVersion );
 	
-	Option ohost = new Option( "host", "H", true, 1, "The host name/IP" );
-	Option oname   = new Option( "name", "n", true, 1, "The name/title" );
+	Option ohost = new Option( "host", "H", true, -1, "The host name/IP" );
+	Option oname   = new Option( "name", "n", true, -1, "The name/title" );
 	
 	o.setOption( ohost );
 	o.setOption( oname );
@@ -53,10 +53,23 @@ public class Client {
 	    System.exit(1);
 	}
 	
-	Client c = new Client();
-	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
+	List<String> hosts = ohost.getStrings();
+	List<String> names = oname.getStrings();
+	
+	if( hosts.size() != names.size() ) {
+	    System.err.println("The number of hosts must the same as the number of names.");
+	    System.exit(1);
+	}
+	
 	MonKit mk = new MonKit();
-	c.start(ohost.getString(), oname.getString(), cr.getCounters(), mk);
+	
+	for( int i = 0 ; i < hosts.size() ; ++i ) {
+        	Client c = new Client();
+        	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
+        	
+        	c.start(hosts.get(i), names.get(i), cr.getCounters(), mk);
+	}
+	//mk.save( new File( "monkit." + oname.getString() + ".xml" ) );
 	mk.save();
     }
 
