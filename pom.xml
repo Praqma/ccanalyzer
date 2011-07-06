@@ -3,7 +3,7 @@
 	<groupId>net.praqma</groupId>
 	<artifactId>ccanalyzer</artifactId>
 	<version>0.0.5-SNAPSHOT</version>
-	<name>MonKit</name>
+	<name>ClearCase Analyzer</name>
 	<url>http://maven.apache.org</url>
 	
 	<properties>

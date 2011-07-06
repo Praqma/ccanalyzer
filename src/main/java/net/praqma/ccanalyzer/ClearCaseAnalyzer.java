@@ -22,6 +22,8 @@ public class ClearCaseAnalyzer {
     
     public static void getVobs( List<Region> regions, MonKit mk ) {
 	
+	mk.addCategory("vobs", "number");
+	
 	for( Region region : regions ) {
 	    List<Vob> vobs = region.getVobs();
 
@@ -30,6 +32,8 @@ public class ClearCaseAnalyzer {
     }
     
     public static void getViews( List<Region> regions, MonKit mk ) {
+	
+	mk.addCategory("views", "number");
 	
 	for( Region region : regions ) {
 	    List<UCMView> views = region.getViews();

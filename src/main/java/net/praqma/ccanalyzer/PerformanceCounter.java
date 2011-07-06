@@ -33,7 +33,8 @@ public class PerformanceCounter {
      * @return
      */
     public static List<String> get( String performanceString, int numberOfSamples, int timeInterval ) {
-	String cmd = prog + " -si " + timeInterval + " - sc " + numberOfSamples + " " + performanceString;
+	String cmd = prog + " -si " + timeInterval + " -sc " + numberOfSamples + " \"" + performanceString + "\"";
+	System.out.println( "--->" + cmd );
 	try {
 	    CmdResult result = CommandLine.getInstance().run( cmd );
 	    

@@ -53,26 +53,10 @@ public class Main {
 	logger.subscribeAll();
 	Cool.setLogger(logger);
 	
-	//String regionString = oregion.getString();
-	
 	MonKit mk = new MonKit();
-	mk.addCategory("vobs", "number");
-	mk.addCategory("views", "number");
-	
-	Site ccsite = new Site("mysite");
 	
 	
-	for (String r : oregion.getStrings()) {
-	    Region ccregion = new Region(r, ccsite);
 
-	    List<Vob> vobs = ccregion.getVobs();
-
-	    mk.add(r, vobs.size() + "", "vobs");
-
-	    List<UCMView> views = ccregion.getViews();
-
-	    mk.add(r, views.size() + "", "views");
-	}
 	
 	/* Final */
 	mk.save();
