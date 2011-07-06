@@ -42,7 +42,7 @@ public abstract class ShortHandCounters {
     
     public static Float getAvailableMemory( ) {
 	
-	List<String> result = PerformanceCounter.get( "\\Memory\\available mbytes", 1, 1 );
+	List<String> result = PerformanceCounterMeter.get( "\\Memory\\available mbytes", 1, 1 );
 	
 	if( result.size() != 1 ) {
 	    throw new PerformanceCounterException("Not one result");
@@ -58,7 +58,7 @@ public abstract class ShortHandCounters {
 	if( driveLetter == null ) {
 	    driveLetter = "_Total";
 	}
-	List<String> result = PerformanceCounter.get( "\\LogicalDisk(" + driveLetter + ")\\% Free Space" );
+	List<String> result = PerformanceCounterMeter.get( "\\LogicalDisk(" + driveLetter + ")\\% Free Space" );
 	
 	if( result.size() != 1 ) {
 	    throw new PerformanceCounterException("Error in number of results");
@@ -74,7 +74,7 @@ public abstract class ShortHandCounters {
     
     public static Float getPagesPerSecond( int numberOfamples, int timeInterval ) {
 	
-	List<String> result = PerformanceCounter.get( "\\Memory\\Pages/sec", numberOfamples, timeInterval );
+	List<String> result = PerformanceCounterMeter.get( "\\Memory\\Pages/sec", numberOfamples, timeInterval );
 	
 	if( result.size() < 1 ) {
 	    throw new PerformanceCounterException("Too few results");

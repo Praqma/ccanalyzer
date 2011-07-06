@@ -31,6 +31,9 @@ public class Client {
             System.exit(1);
         }
         
+        
+        out.println("version " + Server.version );
+        
         in = new BufferedReader(new InputStreamReader( socket.getInputStream() ) );
         
         String line = "";
@@ -64,7 +67,7 @@ public class Client {
         */
         
         
-        out.println(PerformanceCounter.RequestType.NAMED_COUNTER.toString());
+        out.println(PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString());
         out.println("\\Processor(_Total)\\% privileged time");
         out.println("10");
         out.println("1");
