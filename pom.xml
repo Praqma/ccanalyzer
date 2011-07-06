@@ -102,14 +102,14 @@
         <dependency>
             <groupId>net.praqma</groupId>
             <artifactId>praqmajutils</artifactId>
-            <version>0.1.9-SNAPSHOT</version>
+            <version>0.1.8</version>
         </dependency>
 	</dependencies>
 
 	<scm>
-		<connection>scm:git:ssh://github.com/Praqma/CCAnalyzer.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/Praqma/CCAnalyzer.git</developerConnection>
-		<url>https://github.com/Praqma/CCAnalyzer.git</url>
+		<connection>scm:git:ssh://github.com/Praqma/ccanalyzer.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/Praqma/ccanalyzer.git</developerConnection>
+		<url>https://github.com/Praqma/ccanalyzer.git</url>
 	</scm>
 
 </project>

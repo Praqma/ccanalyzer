@@ -1,6 +1,5 @@
 package net.praqma.ccanalyzer;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -69,7 +68,7 @@ public class PerformanceCounterMeter {
 	    /* Is ClearCase!? */
 	    Matcher m = rx_cc.matcher(request.get(1));
 	    if( m.find() ) {
-		String function = m.group(2);
+		//String function = m.group(2);
 	    }
 	    
 	    AggregateFunction fun = AggregateFunction.NUMERICAL_AVERAGE;
