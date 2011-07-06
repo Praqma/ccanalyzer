@@ -1,6 +1,7 @@
 package net.praqma.ccanalyzer;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -14,8 +15,9 @@ public class Client {
     public static void main( String[] args ) throws IOException {
 	Client c = new Client();
 	List<PerformanceCounter> pc = new ArrayList<PerformanceCounter>();
-	pc.add(new PerformanceCounter("\\Processor(_Total)\\% privileged time",10,1) );
-	c.start("", pc);
+	//pc.add(new PerformanceCounter("\\Processor(_Total)\\% privileged time",10,1) );
+	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
+	c.start("", cr.getCounters());
     }
 
     public void start( String host, List<PerformanceCounter> counters ) throws IOException {

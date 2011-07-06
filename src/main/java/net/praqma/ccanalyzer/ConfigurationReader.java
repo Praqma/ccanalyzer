@@ -5,32 +5,42 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.w3c.dom.Element;
+
 import net.praqma.util.xml.XML;
 
 public class ConfigurationReader extends XML {
 
-    public class Configuration {
-	String name;
-	
-	public Configuration( String name ) {
-	    this.name = name;
-	}
-    }
-    
-    private List<Configuration> cfs = new ArrayList<Configuration>();
+    List<PerformanceCounter> counters = new ArrayList<PerformanceCounter>();
     
     public ConfigurationReader( File conf ) throws IOException {
 	super( conf );
+	
+	List<Element> elements = getElements();
+	
+	for( Element e : elements ) {
+	    String counter = e.getTextContent();
+	    
+	    String samples = e.getAttribute("samples");
+	    int ns = 1;
+	    if( !samples.equals("") ) {
+		ns = Integer.parseInt(samples);
+	    }
+	    
+	    String interval = e.getAttribute("interval");
+	    int i = 1;
+	    if( !interval.equals("") ) {
+		i = Integer.parseInt(interval);
+	    }
+	    
+	    counters.add(new PerformanceCounter(counter, ns, i));
+	}
     }
     
-    public List<Configuration> get() {
-	
-	return cfs;
+    public List<PerformanceCounter> getCounters() {
+	return counters;
     }
+    
 
-    public void getValue( String key ) {
-	//getElementsWithAttribute(e, attr, name)
-	
-    }
     
 }
