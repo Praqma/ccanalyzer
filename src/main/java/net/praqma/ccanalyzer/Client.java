@@ -6,15 +6,19 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
     
     public static void main( String[] args ) throws IOException {
 	Client c = new Client();
-	c.start("");
+	List<PerformanceCounter> pc = new ArrayList<PerformanceCounter>();
+	pc.add(new PerformanceCounter("\\Processor(_Total)\\% privileged time",10,1) );
+	c.start("", pc);
     }
 
-    public void start( String host ) throws IOException {
+    public void start( String host, List<PerformanceCounter> counters ) throws IOException {
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
@@ -66,18 +70,19 @@ public class Client {
         System.out.println( "Result: " + line );
         */
         
-        
-        out.println(PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString());
-        out.println("\\Processor(_Total)\\% privileged time");
-        out.println("10");
-        out.println("1");
-        out.println(".");
+        for( PerformanceCounter pc : counters ) {
+	    out.println(PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString());
+	    out.println(pc.counter);
+	    out.println(pc.numberOfSamples);
+	    out.println(pc.intervalTime);
+	    out.println(".");
 
-	while( ( line = in.readLine()) != null ) {
-	    break;
-	}
-        
-        System.out.println( "Result: " + line );
+	    while ((line = in.readLine()) != null) {
+		break;
+	    }
+
+	    System.out.println("Result: " + line);
+        }
         
 	
 	out.println("exit");

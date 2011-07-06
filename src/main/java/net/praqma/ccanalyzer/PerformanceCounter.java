@@ -20,4 +20,10 @@ public class PerformanceCounter {
 	this.intervalTime = intervalTime;
 	this.function = function;
     }
+    
+    public PerformanceCounter( String counter, int numberOfSamples, int intervalTime ) {
+	this.counter = counter;
+	this.numberOfSamples = numberOfSamples;
+	this.intervalTime = intervalTime;
+    }
 }
