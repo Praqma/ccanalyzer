@@ -60,65 +60,76 @@ public class PerformanceCounterMeter {
      * @return
      */
     public static String parseRequest( List<String> request ) {
-	RequestType type = RequestType.valueOf(request.get(0));
-	
-	switch( type ) {
-	case NAMED_COUNTER:
-	    
-	    /* Is ClearCase!? */
-	    Matcher m = rx_cc.matcher(request.get(1));
-	    if( m.find() ) {
-		//String function = m.group(2);
-	    }
-	    
-	    AggregateFunction fun = AggregateFunction.NUMERICAL_AVERAGE;
+        RequestType type = RequestType.valueOf( request.get( 0 ) );
 
-	    int numberOfSamples = 1;
-	    int intervalTime = 1;
+        switch( type ) {
+        case NAMED_COUNTER:
 
-	    if (request.size() > 2) {
-		numberOfSamples = Integer.parseInt(request.get(2));
-	    }
+            /* Is ClearCase!? */
+            Matcher m = rx_cc.matcher( request.get( 1 ) );
+            if( m.find() ) {
+                // String function = m.group(2);
+            }
 
-	    if (request.size() > 3) {
-		intervalTime = Integer.parseInt(request.get(3));
-	    }
+            AggregateFunction fun = AggregateFunction.NUMERICAL_AVERAGE;
 
-	    if (request.size() > 4) {
-		fun = AggregateFunction.valueOf(request.get(4));
-	    }
-	    
-	    List<String> r = get(request.get(1), numberOfSamples, intervalTime);
-	    if( r.size() == 1 ) {
-		return r.get(0);
-	    } else if( r.size() > 1 ) {
-		return getResult( r, fun );
-	    }
-	    break;
-	    
-	   
-	case SHORT_HAND_COUNTER:
-	    return ShortHandCounters.execute(request);	    
-	    
-	}
-	
-	return null;
+            int numberOfSamples = 1;
+            int intervalTime = 1;
+
+            if( request.size() > 2 ) {
+                numberOfSamples = Integer.parseInt( request.get( 2 ) );
+            }
+
+            if( request.size() > 3 ) {
+                intervalTime = Integer.parseInt( request.get( 3 ) );
+            }
+
+            if( request.size() > 4 ) {
+                fun = AggregateFunction.valueOf( request.get( 4 ) );
+            }
+
+            List<String> r = get( request.get( 1 ), numberOfSamples, intervalTime );
+            if( r.size() == 1 ) {
+                return r.get( 0 );
+            } else if( r.size() > 1 ) {
+                return getResult( r, fun );
+            }
+            break;
+
+        case SHORT_HAND_COUNTER:
+            return ShortHandCounters.execute( request );
+
+        }
+
+        return null;
     }
     
+    public static String parseRequest( PerformanceCounter pc ) {
+
+        List<String> r = get( pc.counter, pc.numberOfSamples, pc.intervalTime );
+        if( r.size() == 1 ) {
+            return r.get( 0 );
+        } else if( r.size() > 1 ) {
+            return getResult( r, pc.function );
+        }
+
+        return null;
+    }
+
     public static String getResult( List<String> values, AggregateFunction fun ) {
-	switch( fun ) {
-	case NUMERICAL_AVERAGE:
-	    Float avg = 0.0f;
-	    int total = 0;
-	    for( String v : values ) {
-		avg += new Float(v);
-		total++;
-	    }
-		
-	    return new Float( (avg/total)).toString();
-	}
-	
-	return null;
+        switch( fun ) {
+        case NUMERICAL_AVERAGE:
+            Float avg = 0.0f;
+            int total = 0;
+            for( String v : values ) {
+                avg += new Float( v );
+                total++;
+            }
+
+            return new Float( ( avg / total ) ).toString();
+        }
+
+        return null;
     }
     
     /**

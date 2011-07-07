@@ -1,6 +1,11 @@
 package net.praqma.ccanalyzer;
 
-public class PerformanceCounter {
+import java.io.Serializable;
+
+public class PerformanceCounter implements Serializable {
+
+    private static final long serialVersionUID = -1811413449246591974L;
+
     public String name;
     public String scale;
     public String counter;

@@ -1,6 +1,11 @@
 package net.praqma.ccanalyzer;
 
-public class ClearCaseCounter {
+import java.io.Serializable;
+
+public class ClearCaseCounter implements Serializable {
+
+    private static final long serialVersionUID = -311929916433574394L;
+
     String name;
     String scale;
     String counter;

@@ -2,6 +2,7 @@ package net.praqma.ccanalyzer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import org.w3c.dom.Element;
 
 import net.praqma.util.xml.XML;
 
-public class ConfigurationReader extends XML {
+public class ConfigurationReader extends XML implements Serializable {
 
     List<ClearCaseCounter> ccounters = new ArrayList<ClearCaseCounter>();
     List<PerformanceCounter> pcounters = new ArrayList<PerformanceCounter>();
@@ -60,6 +61,78 @@ public class ConfigurationReader extends XML {
     
     public List<ClearCaseCounter> getClearCaseCounters() {
         return ccounters;
+    }
+    
+    public void addPerformanceCounters( List<PerformanceCounter> pcs ) {
+        /* Check the performance counters */
+        for( PerformanceCounter pc1 : pcs ) {
+            boolean same = false;
+            for( PerformanceCounter pc2 : pcounters ) {
+                /* TODO check for more than the name? The actual counter perhaps? */
+                if( pc1.name.equals( pc2.name ) ) {
+                    same = true;
+                    break;
+                }
+            }
+            
+            if( !same ) {
+                pcounters.add( pc1 );
+            }
+        }
+    }
+    
+    
+    public void addClearCaseCounters( List<ClearCaseCounter> ccs ) {
+        /* Check the ClearCase counters */
+        for( ClearCaseCounter cc1 : ccs ) {
+            boolean same = false;
+            for( ClearCaseCounter cc2 : ccounters ) {
+                /* TODO check for more than the name? The actual counter perhaps? */
+                if( cc1.name.equals( cc2.name ) ) {
+                    same = true;
+                    break;
+                }
+            }
+            
+            if( !same ) {
+                ccounters.add( cc1 );
+            }
+        }
+    }
+    
+    public void addFrom( ConfigurationReader cr ) {
+        
+        /* Check the performance counters */
+        for( PerformanceCounter pc1 : cr.getPerformanceCounters() ) {
+            boolean same = false;
+            for( PerformanceCounter pc2 : pcounters ) {
+                /* TODO check for more than the name? The actual counter perhaps? */
+                if( pc1.name.equals( pc2.name ) ) {
+                    same = true;
+                    break;
+                }
+            }
+            
+            if( !same ) {
+                pcounters.add( pc1 );
+            }
+        }
+        
+        /* Check the ClearCase counters */
+        for( ClearCaseCounter cc1 : cr.getClearCaseCounters() ) {
+            boolean same = false;
+            for( ClearCaseCounter cc2 : ccounters ) {
+                /* TODO check for more than the name? The actual counter perhaps? */
+                if( cc1.name.equals( cc2.name ) ) {
+                    same = true;
+                    break;
+                }
+            }
+            
+            if( !same ) {
+                ccounters.add( cc1 );
+            }
+        }
     }
 
 }

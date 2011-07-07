@@ -1,14 +1,31 @@
 package net.praqma.ccanalyzer;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
+
+import net.praqma.monkit.MonKit;
 
 public class ConfigurationRunner {
     
     ConfigurationReader cr;
     
-    public ConfigurationRunner( String filename ) throws IOException {
-	cr = new ConfigurationReader( new File( filename ) );
+    public ConfigurationRunner( ConfigurationReader cr ) throws IOException {
+        this.cr = cr;
+    }
+    
+    public void run( MonKit mk, String caption ) {
+        
+        System.out.println( "Running for " + caption );
+        
+        /* Performance counters */
+        for( PerformanceCounter pc : cr.getPerformanceCounters() ) {
+
+            String result = PerformanceCounterMeter.parseRequest( pc );
+
+            System.out.println( pc.name + ": " + result + " " + pc.scale );
+
+            mk.addCategory( pc.name, pc.scale );
+
+            mk.add( caption, result, pc.name );
+        }
     }
 }
