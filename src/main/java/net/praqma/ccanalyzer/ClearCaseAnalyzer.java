@@ -13,32 +13,38 @@ import net.praqma.util.debug.PraqmaLogger.Logger;
 
 public class ClearCaseAnalyzer {
     static {
-	Cool.setContext(ContextType.CLEARTOOL);
-	
-	Logger logger = PraqmaLogger.getLogger();
-	logger.subscribeAll();
-	Cool.setLogger(logger);
+        Cool.setContext( ContextType.CLEARTOOL );
+
+        Logger logger = PraqmaLogger.getLogger();
+        logger.subscribeAll();
+        Cool.setLogger( logger );
     }
     
+    public static void analyze( List<ClearCaseCounter> counters, MonKit mk ) {
+        for( ClearCaseCounter c : counters ) {
+            
+        }
+    }
+
     public static void getVobs( List<Region> regions, MonKit mk ) {
-	
-	mk.addCategory("vobs", "number");
-	
-	for( Region region : regions ) {
-	    List<Vob> vobs = region.getVobs();
 
-	    mk.add(region.getName(), vobs.size() + "", "vobs");
-	}
+        mk.addCategory( "vobs", "number" );
+
+        for( Region region : regions ) {
+            List<Vob> vobs = region.getVobs();
+
+            mk.add( region.getName(), vobs.size() + "", "vobs" );
+        }
     }
-    
-    public static void getViews( List<Region> regions, MonKit mk ) {
-	
-	mk.addCategory("views", "number");
-	
-	for( Region region : regions ) {
-	    List<UCMView> views = region.getViews();
 
-	    mk.add(region.getName(), views.size() + "", "views");
-	}
+    public static void getViews( List<Region> regions, MonKit mk ) {
+
+        mk.addCategory( "views", "number" );
+
+        for( Region region : regions ) {
+            List<UCMView> views = region.getViews();
+
+            mk.add( region.getName(), views.size() + "", "views" );
+        }
     }
 }

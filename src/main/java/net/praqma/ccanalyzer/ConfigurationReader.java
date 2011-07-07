@@ -11,38 +11,55 @@ import net.praqma.util.xml.XML;
 
 public class ConfigurationReader extends XML {
 
-    List<PerformanceCounter> counters = new ArrayList<PerformanceCounter>();
-    
-    public ConfigurationReader( File conf ) throws IOException {
-	super( conf );
-	
-	List<Element> elements = getElements();
-	
-	for( Element e : elements ) {
-	    String name = e.getAttribute("name");
-	    String scale = e.getAttribute("scale");
-	    String counter = e.getTextContent();
-	    
-	    String samples = e.getAttribute("samples");
-	    int ns = 1;
-	    if( !samples.equals("") ) {
-		ns = Integer.parseInt(samples);
-	    }
-	    
-	    String interval = e.getAttribute("interval");
-	    int i = 1;
-	    if( !interval.equals("") ) {
-		i = Integer.parseInt(interval);
-	    }
-	    
-	    counters.add(new PerformanceCounter(name, scale, counter, ns, i));
-	}
-    }
-    
-    public List<PerformanceCounter> getCounters() {
-	return counters;
-    }
-    
+    List<ClearCaseCounter> ccounters = new ArrayList<ClearCaseCounter>();
+    List<PerformanceCounter> pcounters = new ArrayList<PerformanceCounter>();
 
+    public ConfigurationReader( File conf ) throws IOException {
+        super( conf );
+        
+        /* Get the ClearCase counters */
+        Element ccs = getFirstElement( "clearcase" );
+        List<Element> elements = getElements( ccs );
+
+        for( Element e : elements ) {
+            String name = e.getAttribute( "name" );
+            String scale = e.getAttribute( "scale" );
+            String counter = e.getTextContent();
+
+            ccounters.add( new ClearCaseCounter( name, scale, counter ) );
+        }
+
+        /* Get the performance counters */
+        Element pcs = getFirstElement( "performance" );
+        List<Element> pelements = getElements( pcs );
+
+        for( Element e : pelements ) {
+            String name = e.getAttribute( "name" );
+            String scale = e.getAttribute( "scale" );
+            String counter = e.getTextContent();
+
+            String samples = e.getAttribute( "samples" );
+            int ns = 1;
+            if( !samples.equals( "" ) ) {
+                ns = Integer.parseInt( samples );
+            }
+
+            String interval = e.getAttribute( "interval" );
+            int i = 1;
+            if( !interval.equals( "" ) ) {
+                i = Integer.parseInt( interval );
+            }
+
+            pcounters.add( new PerformanceCounter( name, scale, counter, ns, i ) );
+        }
+    }
+
+    public List<PerformanceCounter> getPerformanceCounters() {
+        return pcounters;
+    }
     
+    public List<ClearCaseCounter> getClearCaseCounters() {
+        return ccounters;
+    }
+
 }

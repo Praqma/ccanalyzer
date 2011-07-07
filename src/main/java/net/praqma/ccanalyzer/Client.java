@@ -9,68 +9,64 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import net.praqma.clearcase.Cool;
-import net.praqma.clearcase.Cool.ContextType;
 import net.praqma.monkit.MonKit;
-import net.praqma.util.debug.PraqmaLogger;
-import net.praqma.util.debug.PraqmaLogger.Logger;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
 
 public class Client {
-    
+
     public static void main2( String[] args ) throws IOException {
-	Client c = new Client();
-	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
-	MonKit mk = new MonKit();
-	c.start("", "Wolles", cr.getCounters(), mk);
-	mk.save();
+        Client c = new Client();
+        ConfigurationReader cr = new ConfigurationReader( new File( "config.xml" ) );
+        MonKit mk = new MonKit();
+        c.start( "", "Wolles", cr.getPerformanceCounters(), mk );
+        mk.save();
     }
-    
-    public static void main(String[] args) throws IOException {
-	
-	Options o = new Options( Server.textualVersion );
-	
-	Option ohost = new Option( "host", "H", true, -1, "The host name/IP" );
-	Option oname   = new Option( "name", "n", true, -1, "The name/title" );
-	
-	o.setOption( ohost );
-	o.setOption( oname );
-	
-	o.setDefaultOptions();
-	
-	o.setSyntax( "" );
-	o.setHeader( "" );
-	o.setDescription( "" );
-	
-	o.parse( args );
-	
-	try {
-	    o.checkOptions();
-	} catch (Exception e) {
-	    System.err.println("Incorrect option: " + e.getMessage());
-	    o.display();
-	    System.exit(1);
-	}
-	
-	List<String> hosts = ohost.getStrings();
-	List<String> names = oname.getStrings();
-	
-	if( hosts.size() != names.size() ) {
-	    System.err.println("The number of hosts must the same as the number of names.");
-	    System.exit(1);
-	}
-	
-	MonKit mk = new MonKit();
-	
-	for( int i = 0 ; i < hosts.size() ; ++i ) {
-        	Client c = new Client();
-        	ConfigurationReader cr = new ConfigurationReader(new File( "config.xml") );
-        	
-        	c.start(hosts.get(i), names.get(i), cr.getCounters(), mk);
-	}
-	//mk.save( new File( "monkit." + oname.getString() + ".xml" ) );
-	mk.save();
+
+    public static void main( String[] args ) throws IOException {
+
+        Options o = new Options( Server.textualVersion );
+
+        Option ohost = new Option( "host", "H", true, -1, "The host name/IP" );
+        Option oname = new Option( "name", "n", true, -1, "The name/title" );
+
+        o.setOption( ohost );
+        o.setOption( oname );
+
+        o.setDefaultOptions();
+
+        o.setSyntax( "" );
+        o.setHeader( "" );
+        o.setDescription( "" );
+
+        o.parse( args );
+
+        try {
+            o.checkOptions();
+        } catch( Exception e ) {
+            System.err.println( "Incorrect option: " + e.getMessage() );
+            o.display();
+            System.exit( 1 );
+        }
+
+        List<String> hosts = ohost.getStrings();
+        List<String> names = oname.getStrings();
+
+        if( hosts.size() != names.size() ) {
+            System.err.println( "The number of hosts must the same as the number of names." );
+            System.exit( 1 );
+        }
+
+        MonKit mk = new MonKit();
+
+        for( int i = 0; i < hosts.size(); ++i ) {
+            Client c = new Client();
+            ConfigurationReader cr = new ConfigurationReader( new File( "config.xml" ) );
+
+            c.start( hosts.get( i ), names.get( i ), cr.getPerformanceCounters(), mk );
+        }
+        // mk.save( new File( "monkit." + oname.getString() + ".xml" ) );
+        mk.save();
     }
 
     public void start( String host, String clientName, List<PerformanceCounter> counters, MonKit mk ) throws IOException {
@@ -79,56 +75,54 @@ public class Client {
         BufferedReader in = null;
 
         try {
-            socket = new Socket(host, Server.port);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            
-        } catch (UnknownHostException e) {
+            socket = new Socket( host, Server.port );
+            out = new PrintWriter( socket.getOutputStream(), true );
+
+        } catch( UnknownHostException e ) {
             System.err.println( "Unkown host " + host );
-            System.exit(1);
-        } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to: " + host);
-            System.exit(1);
+            System.exit( 1 );
+        } catch( IOException e ) {
+            System.err.println( "Couldn't get I/O for the connection to: " + host );
+            System.exit( 1 );
         }
-        
-        in = new BufferedReader(new InputStreamReader( socket.getInputStream() ) );
-        
+
+        in = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
+
         String line = "";
-        
+
         /* Super simple handshaking.... */
-        out.println("version " + Server.version );
-	while((line = in.readLine()) != null) {
-	    break;
-	}
-        if( line.equals("0") ) {
-            System.err.println("Version mismatch!");
-            throw new PerformanceCounterException("Version mismatch");
+        out.println( "version " + Server.version );
+        while( ( line = in.readLine() ) != null ) {
+            break;
+        }
+        if( line.equals( "0" ) ) {
+            System.err.println( "Version mismatch!" );
+            throw new PerformanceCounterException( "Version mismatch" );
         }
 
-        
         for( PerformanceCounter pc : counters ) {
-	    out.println(PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString());
-	    out.println(pc.counter);
-	    out.println(pc.numberOfSamples);
-	    out.println(pc.intervalTime);
-	    out.println(".");
+            out.println( PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString() );
+            out.println( pc.counter );
+            out.println( pc.numberOfSamples );
+            out.println( pc.intervalTime );
+            out.println( "." );
 
-	    while ((line = in.readLine()) != null) {
-		break;
-	    }
+            while( ( line = in.readLine() ) != null ) {
+                break;
+            }
 
-	    System.out.println(pc.name + ": " + line + " " + pc.scale);
-	    
-	    mk.addCategory(pc.name, pc.scale);
-	    
-	    mk.add(clientName, line, pc.name);
+            System.out.println( pc.name + ": " + line + " " + pc.scale );
+
+            mk.addCategory( pc.name, pc.scale );
+
+            mk.add( clientName, line, pc.name );
         }
-        
-	
-	out.println("exit");
 
-	out.close();
-	in.close();
-	
-	socket.close();
+        out.println( "exit" );
+
+        out.close();
+        in.close();
+
+        socket.close();
     }
 }
