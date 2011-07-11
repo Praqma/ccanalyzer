@@ -14,8 +14,8 @@ public class ConfigurationReader extends XML implements Serializable {
 
     private static final long serialVersionUID = 3648821402865625037L;
 
-    List<ClearCaseCounter> ccounters = new ArrayList<ClearCaseCounter>();
-    List<PerformanceCounter> pcounters = new ArrayList<PerformanceCounter>();
+    List<ClearCaseCounterConfiguration> ccounters = new ArrayList<ClearCaseCounterConfiguration>();
+    List<PerformanceCounterConfiguration> pcounters = new ArrayList<PerformanceCounterConfiguration>();
     
     public ConfigurationReader() {
     }
@@ -37,7 +37,7 @@ public class ConfigurationReader extends XML implements Serializable {
             String scale = e.getAttribute( "scale" );
             String counter = e.getTextContent();
 
-            ccounters.add( new ClearCaseCounter( name, scale, counter ) );
+            ccounters.add( new ClearCaseCounterConfiguration( name, scale, counter ) );
         }
 
         /* Get the performance counters */
@@ -61,23 +61,23 @@ public class ConfigurationReader extends XML implements Serializable {
                 i = Integer.parseInt( interval );
             }
 
-            pcounters.add( new PerformanceCounter( name, scale, counter, ns, i ) );
+            pcounters.add( new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
         }
     }
 
-    public List<PerformanceCounter> getPerformanceCounters() {
+    public List<PerformanceCounterConfiguration> getPerformanceCounters() {
         return pcounters;
     }
     
-    public List<ClearCaseCounter> getClearCaseCounters() {
+    public List<ClearCaseCounterConfiguration> getClearCaseCounters() {
         return ccounters;
     }
     
-    public void addPerformanceCounters( List<PerformanceCounter> pcs ) {
+    public void addPerformanceCounters( List<PerformanceCounterConfiguration> pcs ) {
         /* Check the performance counters */
-        for( PerformanceCounter pc1 : pcs ) {
+        for( PerformanceCounterConfiguration pc1 : pcs ) {
             boolean same = false;
-            for( PerformanceCounter pc2 : pcounters ) {
+            for( PerformanceCounterConfiguration pc2 : pcounters ) {
                 /* TODO check for more than the name? The actual counter perhaps? */
                 if( pc1.name.equals( pc2.name ) ) {
                     same = true;
@@ -92,11 +92,11 @@ public class ConfigurationReader extends XML implements Serializable {
     }
     
     
-    public void addClearCaseCounters( List<ClearCaseCounter> ccs ) {
+    public void addClearCaseCounters( List<ClearCaseCounterConfiguration> ccs ) {
         /* Check the ClearCase counters */
-        for( ClearCaseCounter cc1 : ccs ) {
+        for( ClearCaseCounterConfiguration cc1 : ccs ) {
             boolean same = false;
-            for( ClearCaseCounter cc2 : ccounters ) {
+            for( ClearCaseCounterConfiguration cc2 : ccounters ) {
                 /* TODO check for more than the name? The actual counter perhaps? */
                 if( cc1.name.equals( cc2.name ) ) {
                     same = true;
@@ -113,9 +113,9 @@ public class ConfigurationReader extends XML implements Serializable {
     public void addFrom( ConfigurationReader cr ) {
         
         /* Check the performance counters */
-        for( PerformanceCounter pc1 : cr.getPerformanceCounters() ) {
+        for( PerformanceCounterConfiguration pc1 : cr.getPerformanceCounters() ) {
             boolean same = false;
-            for( PerformanceCounter pc2 : pcounters ) {
+            for( PerformanceCounterConfiguration pc2 : pcounters ) {
                 /* TODO check for more than the name? The actual counter perhaps? */
                 if( pc1.name.equals( pc2.name ) ) {
                     same = true;
@@ -129,9 +129,9 @@ public class ConfigurationReader extends XML implements Serializable {
         }
         
         /* Check the ClearCase counters */
-        for( ClearCaseCounter cc1 : cr.getClearCaseCounters() ) {
+        for( ClearCaseCounterConfiguration cc1 : cr.getClearCaseCounters() ) {
             boolean same = false;
-            for( ClearCaseCounter cc2 : ccounters ) {
+            for( ClearCaseCounterConfiguration cc2 : ccounters ) {
                 /* TODO check for more than the name? The actual counter perhaps? */
                 if( cc1.name.equals( cc2.name ) ) {
                     same = true;
@@ -148,7 +148,7 @@ public class ConfigurationReader extends XML implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         
-        for( PerformanceCounter pc : pcounters ) {
+        for( PerformanceCounterConfiguration pc : pcounters ) {
             sb.append( pc.toString() + " - " );
         }
         

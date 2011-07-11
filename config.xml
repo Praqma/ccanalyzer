@@ -1,7 +1,7 @@
 <config>
 	<clearcase>
-		<counter name="Number of vobs" scale="number">numberOfVobs</counter>
-		<counter name="Number of views" scale="number">numberOfViews</counter>
+		<counter name="Number of vobs" scale="number">\clearcase(praqma)\numberOfVobs</counter>
+		<counter name="Number of vobs" scale="number">\clearcase(triggertest)\numberOfVobs</counter>
 	</clearcase>
 	<performance>
 		<counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available mbytes</counter>

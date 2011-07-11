@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.praqma.ccanalyzer.PerformanceCounter.AggregateFunction;
+import net.praqma.ccanalyzer.PerformanceCounterConfiguration.AggregateFunction;
 import net.praqma.util.execute.AbnormalProcessTerminationException;
 import net.praqma.util.execute.CmdResult;
 import net.praqma.util.execute.CommandLine;
@@ -71,6 +71,7 @@ public class PerformanceCounterMeter {
             if( m.find() ) {
                 System.out.println( "ClearCase stuff" );
                 // String function = m.group(2);
+                return "1.0";
             }
 
             AggregateFunction fun = AggregateFunction.NUMERICAL_AVERAGE;
@@ -106,7 +107,7 @@ public class PerformanceCounterMeter {
         return null;
     }
 
-    public static String parseRequest( PerformanceCounter pc ) {
+    public static String parseRequest( PerformanceCounterConfiguration pc ) {
 
         List<String> r = get( pc.counter, pc.numberOfSamples, pc.intervalTime );
         if( r.size() == 1 ) {

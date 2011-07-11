@@ -25,6 +25,7 @@ public class Main {
         Option oport = new Option( "port", "p", false, 1, "The port, default is 44444" );
         Option ohost = new Option( "host", "H", true, -1, "The host name/IP" );
         Option oname = new Option( "name", "n", true, -1, "The name/title" );
+        Option occ   = new Option( "clearcase", "C", false, -1, "The ClearCase host" );
         Option ofile = new Option( "file", "f", false, 1, "The name of the MonKit file output" );
         Option oconf = new Option( "config", "c", false, 1, "The config file, default is config.xml" );
 
@@ -32,6 +33,7 @@ public class Main {
         o.setOption( oname );
         o.setOption( ofile );
         o.setOption( oconf );
+        o.setOption( occ );
 
         o.setDefaultOptions();
 
@@ -66,7 +68,7 @@ public class Main {
         
         ConfigurationReader cr = null;
         
-        if( oconf.used ) {
+        if( oconf.isUsed() ) {
             cr = new ConfigurationReader( new File( oconf.getString() ) );
         } else {
             cr = new ConfigurationReader( new File( "config.xml" ) );
@@ -75,17 +77,21 @@ public class Main {
         /* If any hosts defined to analyze */
         if( hosts.size() > 0 ) {
             for( int i = 0; i < hosts.size(); ++i ) {
-                Client c = new Client();
+                PerformanceClient c = new PerformanceClient( port, hosts.get( i ), names.get( i ), mk );
     
-                c.start( port, hosts.get( i ), names.get( i ), cr.getPerformanceCounters(), mk );
+                c.start( cr );
             }
         }
         
         /* Do the ClearCase */
-        
+        if( occ.isUsed() ) {
+            ClearCaseClient c = new ClearCaseClient( port, occ.getString(), "CC", mk );
+            
+            c.start( cr );
+        }
         
         /* Save the MonKit file */
-        if( ofile.used ) {
+        if( ofile.isUsed() ) {
             mk.save( new File( ofile.getString() ) );
         } else {
             mk.save();

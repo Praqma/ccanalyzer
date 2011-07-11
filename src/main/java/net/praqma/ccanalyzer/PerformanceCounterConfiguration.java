@@ -2,7 +2,7 @@ package net.praqma.ccanalyzer;
 
 import java.io.Serializable;
 
-public class PerformanceCounter implements Serializable {
+public class PerformanceCounterConfiguration implements Serializable {
 
     private static final long serialVersionUID = -1811413449246591974L;
 
@@ -20,7 +20,7 @@ public class PerformanceCounter implements Serializable {
         FIRST
     }
 
-    public PerformanceCounter( String name, String scale, String counter, int numberOfSamples, int intervalTime, AggregateFunction function ) {
+    public PerformanceCounterConfiguration( String name, String scale, String counter, int numberOfSamples, int intervalTime, AggregateFunction function ) {
         this.name = name;
         this.scale = scale;
         this.counter = counter;
@@ -29,7 +29,7 @@ public class PerformanceCounter implements Serializable {
         this.function = function;
     }
 
-    public PerformanceCounter( String name, String scale, String counter, int numberOfSamples, int intervalTime ) {
+    public PerformanceCounterConfiguration( String name, String scale, String counter, int numberOfSamples, int intervalTime ) {
         this.name = name;
         this.scale = scale;
         this.counter = counter;

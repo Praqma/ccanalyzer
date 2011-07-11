@@ -20,8 +20,8 @@ public class ClearCaseAnalyzer {
         Cool.setLogger( logger );
     }
     
-    public static void analyze( List<ClearCaseCounter> counters, MonKit mk ) {
-        for( ClearCaseCounter c : counters ) {
+    public static void analyze( List<ClearCaseCounterConfiguration> counters, MonKit mk ) {
+        for( ClearCaseCounterConfiguration c : counters ) {
             
         }
     }

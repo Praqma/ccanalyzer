@@ -17,7 +17,7 @@ public class ConfigurationRunner {
         System.out.println( "Running for " + caption );
         
         /* Performance counters */
-        for( PerformanceCounter pc : cr.getPerformanceCounters() ) {
+        for( PerformanceCounterConfiguration pc : cr.getPerformanceCounters() ) {
 
             String result = PerformanceCounterMeter.parseRequest( pc );
 
