@@ -20,7 +20,7 @@ public class Server {
     
     private int counter = 0;
     public static int version = 1;
-    public static String textualVersion = "0.1.0";
+    public static String textualVersion = "0.2.1";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
 

@@ -37,9 +37,12 @@ public class Main {
 
         o.setDefaultOptions();
 
-        o.setSyntax( "" );
-        o.setHeader( "" );
-        o.setDescription( "" );
+        o.setSyntax( "Main [-p <port number>] [-H <list of hosts>] [-n <list of names>] [-C <host of the ClearCase server] [-c <path to config>]" );
+        o.setHeader( "Query a CCAnalyser server" );
+        String desc = "Given a set of hosts and a set of names(there's a one to one correspondence between hosts and names),\n" +
+                      "the hosts a queried for a configured set of performance and/or ClearCase counters.\n\nFx Main -H 127.0.0.1 10.10.1.83 -n localhost CC_CLIENT2 -c \"c:\\config.xml\"\n\n" +
+                      "The hosts and names are given as white space separated lists.";
+        o.setDescription( desc );
 
         o.parse( args );
 
