@@ -67,11 +67,24 @@ public class PerformanceCounterMeter {
         case NAMED_COUNTER:
 
             /* Is ClearCase!? */
-            Matcher m = ClearCaseCounter.rx_.matcher( request.get( 1 ) );
-            if( m.find() ) {
+            ClearCaseCounter ccc = ClearCaseCounter.fromString( request.get( 1 ) );
+            if( ccc != null ) {
                 System.out.println( " $" + request.get( 1 ) );
-                // String function = m.group(2);
-                return "1.0";
+                
+                try {
+                    Class clazz = Class.forName( "net.praqma.ccanalyzer.clearcase." + ccc.getFunction() );
+                    ClearCaseFunction instance = (ClearCaseFunction) clazz.newInstance();
+                    return instance.perform( ccc );
+                } catch( ClassNotFoundException e ) {
+                    System.err.println( "The requested class " + ccc.getFunction() + " was not found" );
+                    return "";
+                } catch( InstantiationException e ) {
+                    System.err.println( "Could not instantiate " + ccc.getFunction() );
+                    return "";
+                } catch( IllegalAccessException e ) {
+                    System.err.println( "Could not get access to instantiate " + ccc.getFunction() );
+                    return "";
+                }
             }
 
             AggregateFunction fun = AggregateFunction.NUMERICAL_AVERAGE;

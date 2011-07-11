@@ -25,12 +25,18 @@ public class ClearCaseClient extends AbstractClient {
             while( ( line = in.readLine() ) != null ) {
                 break;
             }
+            
+            /* Error result */
+            if( line == null || line.length() == 0 ) {
+                System.err.println( "Erroneous result" );
+            } else {
 
-            System.out.println( ccc.getName() + ": " + line + " " + ccc.getScale() );
-
-            monkit.addCategory( ccc.getName(), ccc.getScale() );
-
-            monkit.add( ccc.getCounter().getModifier(), line, ccc.getName() );
+                System.out.println( ccc.getName() + ": " + line + " " + ccc.getScale() );
+    
+                monkit.addCategory( ccc.getName(), ccc.getScale() );
+    
+                monkit.add( ccc.getCounter().getModifier(), line, ccc.getName() );
+            }
         }
     }
     
