@@ -1,10 +1,13 @@
 <config>
+	<!-- ClearCase is on the form \clearcase(<modifier>)\<function> 
+	     The function is case sensitive!
+	-->
 	<clearcase>
 		<counter name="Number of vobs" scale="number">\clearcase(praqma)\NumberOfVobs</counter>
 		<counter name="Number of vobs" scale="number">\clearcase(triggertest)\NumberOfVobs</counter>
 		
-		<counter name="Number of vobs" scale="number">\clearcase(praqma)\NumberOfViews</counter>
-		<counter name="Number of vobs" scale="number">\clearcase(triggertest)\NumberOfViews</counter>
+		<counter name="Number of views" scale="number">\clearcase(praqma)\NumberOfViews</counter>
+		<counter name="Number of views" scale="number">\clearcase(triggertest)\NumberOfViews</counter>
 	</clearcase>
 	<performance>
 		<counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available mbytes</counter>

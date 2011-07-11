@@ -16,6 +16,8 @@ public class ClearCaseClient extends AbstractClient {
         
         String line = "";
         
+        System.out.println( "Obtaining ClearCase information" );
+        
         /* Get the performance counters */
         for( ClearCaseCounterConfiguration ccc : counters.getClearCaseCounters() ) {
             out.println( PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString() );
@@ -31,7 +33,7 @@ public class ClearCaseClient extends AbstractClient {
                 System.err.println( "Erroneous result" );
             } else {
 
-                System.out.println( ccc.getName() + ": " + line + " " + ccc.getScale() );
+                System.out.println( ccc.getName() + "(" + ccc.getCounter().getModifier() + "): " + line + " " + ccc.getScale() );
     
                 monkit.addCategory( ccc.getName(), ccc.getScale() );
     

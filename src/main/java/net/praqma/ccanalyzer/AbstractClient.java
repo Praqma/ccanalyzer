@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
 
 import net.praqma.monkit.MonKit;
 
@@ -56,6 +55,8 @@ public abstract class AbstractClient {
             throw new PerformanceCounterException( "Version mismatch" );
         }
         
+        System.out.println( "Connected to " + host );
+        
         /* Do the counting */
         perform( counters, out, in );
         
@@ -65,6 +66,8 @@ public abstract class AbstractClient {
         in.close();
 
         socket.close();
+        
+        System.out.println( "Disconnected\n" );
     }
     
     protected abstract void perform( ConfigurationReader counters, PrintWriter out, BufferedReader in ) throws IOException;
