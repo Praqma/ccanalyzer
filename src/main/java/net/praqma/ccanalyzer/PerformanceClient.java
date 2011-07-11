@@ -25,12 +25,14 @@ public class PerformanceClient extends AbstractClient {
             out.println( pc.numberOfSamples );
             out.println( pc.intervalTime );
             out.println( "." );
+            
+            System.out.print( pc.name + ": " );
 
             while( ( line = in.readLine() ) != null ) {
                 break;
             }
 
-            System.out.println( pc.name + ": " + line + " " + pc.scale );
+            System.out.println( line + " " + pc.scale );
 
             monkit.addCategory( pc.name, pc.scale );
 
