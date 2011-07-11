@@ -16,7 +16,6 @@ public class PerformanceCounterMeter {
     private static int timeInterval = 1; // Seconds
 
     private static Pattern rx_ = Pattern.compile( "^\\\"(.*?)\\\",\\\"(.*?)\\\"$" );
-    private static Pattern rx_cc = Pattern.compile( "^\\\\(?i:clearcase)\\\\(.*?)$" );
 
     public enum RequestType {
         NAMED_COUNTER, 

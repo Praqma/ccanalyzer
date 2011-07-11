@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import net.praqma.clearcase.Cool;
-import net.praqma.clearcase.Cool.ContextType;
 import net.praqma.monkit.MonKit;
-import net.praqma.util.debug.PraqmaLogger;
-import net.praqma.util.debug.PraqmaLogger.Logger;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
 

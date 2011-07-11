@@ -20,12 +20,6 @@ public class ClearCaseAnalyzer {
         logger.subscribeAll();
         Cool.setLogger( logger );
     }
-    
-    public static void analyze( List<ClearCaseCounterConfiguration> counters, MonKit mk ) {
-        for( ClearCaseCounterConfiguration c : counters ) {
-            
-        }
-    }
 
     public static void getVobs( List<Region> regions, MonKit mk ) {
 
