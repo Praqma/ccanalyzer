@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Element;
 
@@ -17,32 +19,43 @@ public class ConfigurationReader extends XML implements Serializable {
     List<ClearCaseCounterConfiguration> ccounters = new ArrayList<ClearCaseCounterConfiguration>();
     List<PerformanceCounterConfiguration> pcounters = new ArrayList<PerformanceCounterConfiguration>();
     
+    //Map<String, List<PerformanceCounterConfiguration>> config = new HashMap<String, List<PerformanceCounterConfiguration>>();
+    Map<String, Map<String, PerformanceCounterConfiguration>> config = new HashMap<String, Map<String, PerformanceCounterConfiguration>>();
+    
     public ConfigurationReader() {
     }
 
     public ConfigurationReader( File conf ) throws IOException {
         super( conf );
         
-        initialize();
+        //initialize();
     }
     
-    public void initialize() {
+    public void initialize( List<String> hosts, String ccHost) {
         
         /* Get the ClearCase counters */
-        Element ccs = getFirstElement( "clearcase" );
-        List<Element> elements = getElements( ccs );
-
-        for( Element e : elements ) {
-            String name = e.getAttribute( "name" );
-            String scale = e.getAttribute( "scale" );
-            String counter = e.getTextContent();
-
-            ccounters.add( new ClearCaseCounterConfiguration( name, scale, counter ) );
+        if( ccHost != null ) {
+            Element ccs = getFirstElement( "clearcase" );
+            List<Element> elements = getElements( ccs );
+    
+            for( Element e : elements ) {
+                String name = e.getAttribute( "name" );
+                String scale = e.getAttribute( "scale" );
+                String counter = e.getTextContent();
+    
+                ccounters.add( new ClearCaseCounterConfiguration( name, scale, counter ) );
+            }
+        }
+        
+        for( String host : hosts ) {
+            //System.out.println( "Adding host " + host );
+            config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
         }
 
-        /* Get the performance counters */
+        /* Get the general performance counters */
         Element pcs = getFirstElement( "performance" );
-        List<Element> pelements = getElements( pcs );
+        Element gpcs = getFirstElement( pcs, "general" );
+        List<Element> pelements = getElements( gpcs );
 
         for( Element e : pelements ) {
             String name = e.getAttribute( "name" );
@@ -61,12 +74,52 @@ public class ConfigurationReader extends XML implements Serializable {
                 i = Integer.parseInt( interval );
             }
 
-            pcounters.add( new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+            for( String host : hosts ) {
+                config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+            }
+        }
+        
+        /* Get the specific performance counters */
+        Element spcs = getFirstElement( pcs, "specific" );
+        List<Element> hostElements = getElements( spcs );
+
+        /* For all hosts */
+        for( Element e : hostElements ) {
+            
+            List<Element> he = getElements( e );
+            String host = e.getAttribute( "host" );
+
+            if( config.get( host ) == null ) {
+                //System.out.println( "Adding host " + host );
+                config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
+            }
+            
+            /* For all counters in host */
+            for( Element hostCounter : he ) {
+                String name = hostCounter.getAttribute( "name" );
+                String scale = hostCounter.getAttribute( "scale" );
+                String counter = hostCounter.getTextContent();
+    
+                String samples = hostCounter.getAttribute( "samples" );
+                int ns = 1;
+                if( !samples.equals( "" ) ) {
+                    ns = Integer.parseInt( samples );
+                }
+    
+                String interval = e.getAttribute( "interval" );
+                int i = 1;
+                if( !interval.equals( "" ) ) {
+                    i = Integer.parseInt( interval );
+                }
+    
+                config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+            }
         }
     }
 
-    public List<PerformanceCounterConfiguration> getPerformanceCounters() {
-        return pcounters;
+    public List<PerformanceCounterConfiguration> getPerformanceCounters( String host ) {
+        Map<String, PerformanceCounterConfiguration> c = config.get( host );
+        return new ArrayList<PerformanceCounterConfiguration>(c.values());
     }
     
     public List<ClearCaseCounterConfiguration> getClearCaseCounters() {
@@ -113,7 +166,7 @@ public class ConfigurationReader extends XML implements Serializable {
     public void addFrom( ConfigurationReader cr ) {
         
         /* Check the performance counters */
-        for( PerformanceCounterConfiguration pc1 : cr.getPerformanceCounters() ) {
+        for( PerformanceCounterConfiguration pc1 : cr.getPerformanceCounters( "" ) ) { // TODO This shold be a host, not an empty string
             boolean same = false;
             for( PerformanceCounterConfiguration pc2 : pcounters ) {
                 /* TODO check for more than the name? The actual counter perhaps? */

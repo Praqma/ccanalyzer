@@ -73,6 +73,8 @@ public class Main {
         } else {
             cr = new ConfigurationReader( new File( "config.xml" ) );
         }
+        
+        cr.initialize( hosts, "" );
 
         /* If any hosts defined to analyze */
         if( hosts.size() > 0 ) {

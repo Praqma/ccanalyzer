@@ -19,7 +19,7 @@ public class PerformanceClient extends AbstractClient {
         System.out.println( "Obtaining Performance information" );
         
         /* Get the performance counters */
-        for( PerformanceCounterConfiguration pc : counters.getPerformanceCounters() ) {
+        for( PerformanceCounterConfiguration pc : counters.getPerformanceCounters( host ) ) {
             out.println( PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString() );
             out.println( pc.counter );
             out.println( pc.numberOfSamples );

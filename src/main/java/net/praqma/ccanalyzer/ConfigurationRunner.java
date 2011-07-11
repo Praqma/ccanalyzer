@@ -17,7 +17,7 @@ public class ConfigurationRunner {
         System.out.println( "Running for " + caption );
         
         /* Performance counters */
-        for( PerformanceCounterConfiguration pc : cr.getPerformanceCounters() ) {
+        for( PerformanceCounterConfiguration pc : cr.getPerformanceCounters("") ) { // TODO not a host name
 
             String result = PerformanceCounterMeter.parseRequest( pc );
 
