@@ -94,13 +94,13 @@
 		<dependency>
 			<groupId>net.praqma</groupId>
 			<artifactId>praqmajutils</artifactId>
-			<version>0.1.9-SNAPSHOT</version>
+			<version>0.1.9</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.praqma</groupId>
 			<artifactId>monkit</artifactId>
-			<version>0.1.8-SNAPSHOT</version>
+			<version>0.1.8</version>
 		</dependency>
 	</dependencies>
 
