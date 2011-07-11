@@ -12,11 +12,21 @@ import net.praqma.util.xml.XML;
 
 public class ConfigurationReader extends XML implements Serializable {
 
+    private static final long serialVersionUID = 3648821402865625037L;
+
     List<ClearCaseCounter> ccounters = new ArrayList<ClearCaseCounter>();
     List<PerformanceCounter> pcounters = new ArrayList<PerformanceCounter>();
+    
+    public ConfigurationReader() {
+    }
 
     public ConfigurationReader( File conf ) throws IOException {
         super( conf );
+        
+        initialize();
+    }
+    
+    public void initialize() {
         
         /* Get the ClearCase counters */
         Element ccs = getFirstElement( "clearcase" );
@@ -133,6 +143,16 @@ public class ConfigurationReader extends XML implements Serializable {
                 ccounters.add( cc1 );
             }
         }
+    }
+    
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        
+        for( PerformanceCounter pc : pcounters ) {
+            sb.append( pc.toString() + " - " );
+        }
+        
+        return sb.toString();
     }
 
 }

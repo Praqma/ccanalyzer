@@ -14,7 +14,7 @@ public class PerformanceCounter implements Serializable {
 
     public AggregateFunction function = AggregateFunction.NUMERICAL_AVERAGE;
 
-    public enum AggregateFunction {
+    public enum AggregateFunction implements Serializable {
         NUMERICAL_SUM, 
         NUMERICAL_AVERAGE, 
         FIRST
@@ -35,5 +35,9 @@ public class PerformanceCounter implements Serializable {
         this.counter = counter;
         this.numberOfSamples = numberOfSamples;
         this.intervalTime = intervalTime;
+    }
+    
+    public String toString() {
+        return name + "(" + counter + ")";
     }
 }
