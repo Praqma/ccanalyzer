@@ -28,17 +28,19 @@ public abstract class AbstractClient {
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
+        
+        System.out.print( "Trying to connect to " + host );
 
         try {
             socket = new Socket( host, port );
             out = new PrintWriter( socket.getOutputStream(), true );
 
         } catch( UnknownHostException e ) {
-            System.err.println( "Unkown host " + host );
-            System.exit( 1 );
+            System.out.println( "\rError, unkown host " + host + "\n" );
+            return;
         } catch( IOException e ) {
-            System.err.println( "Couldn't get I/O for the connection to: " + host );
-            System.exit( 1 );
+            System.out.println( "\rError, unable to connect to " + host + "\n" );
+            return;
         }
 
         in = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
@@ -51,11 +53,11 @@ public abstract class AbstractClient {
             break;
         }
         if( line.equals( "0" ) ) {
-            System.err.println( "Version mismatch!" );
+            System.out.println( "\rError, version mismatch at " + host + "\n" );
             throw new PerformanceCounterException( "Version mismatch" );
         }
         
-        System.out.println( "Connected to " + host );
+        System.out.println( "\rSuccessfully connected to " + host );
         
         /* Do the counting */
         perform( counters, out, in );
