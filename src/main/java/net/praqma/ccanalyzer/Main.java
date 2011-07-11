@@ -22,6 +22,7 @@ public class Main {
 	
         Options o = new Options( Server.textualVersion );
 
+        Option oport = new Option( "port", "p", false, 1, "The port, default is 44444" );
         Option ohost = new Option( "host", "H", true, -1, "The host name/IP" );
         Option oname = new Option( "name", "n", true, -1, "The name/title" );
         Option ofile = new Option( "file", "f", false, 1, "The name of the MonKit file output" );
@@ -47,6 +48,11 @@ public class Main {
             o.display();
             System.exit( 1 );
         }
+        
+        Integer port = Server.defaultPort;
+        if( oport.isUsed() ) {
+            port = oport.getInteger();
+        }
 
         List<String> hosts = ohost.getStrings();
         List<String> names = oname.getStrings();
@@ -71,7 +77,7 @@ public class Main {
             for( int i = 0; i < hosts.size(); ++i ) {
                 Client c = new Client();
     
-                c.start( hosts.get( i ), names.get( i ), cr.getPerformanceCounters(), mk );
+                c.start( port, hosts.get( i ), names.get( i ), cr.getPerformanceCounters(), mk );
             }
         }
         

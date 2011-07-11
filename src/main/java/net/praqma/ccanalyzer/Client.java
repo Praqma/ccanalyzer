@@ -15,23 +15,17 @@ import net.praqma.util.option.Options;
 
 public class Client {
 
-    public static void main2( String[] args ) throws IOException {
-        Client c = new Client();
-        ConfigurationReader cr = new ConfigurationReader( new File( "config.xml" ) );
-        MonKit mk = new MonKit();
-        c.start( "", "Wolles", cr.getPerformanceCounters(), mk );
-        mk.save();
-    }
-
     public static void main( String[] args ) throws IOException {
 
         Options o = new Options( Server.textualVersion );
 
         Option ohost = new Option( "host", "H", true, -1, "The host name/IP" );
         Option oname = new Option( "name", "n", true, -1, "The name/title" );
+        Option oport = new Option( "port", "p", false, 1, "The port, default is 44444" );
 
         o.setOption( ohost );
         o.setOption( oname );
+        o.setOption( oport );
 
         o.setDefaultOptions();
 
@@ -51,31 +45,36 @@ public class Client {
 
         List<String> hosts = ohost.getStrings();
         List<String> names = oname.getStrings();
+        
+        Integer port = Server.defaultPort;
+        if( oport.isUsed() ) {
+            port = oport.getInteger();
+        }
 
         if( hosts.size() != names.size() ) {
             System.err.println( "The number of hosts must the same as the number of names." );
             System.exit( 1 );
         }
-
+        
         MonKit mk = new MonKit();
 
         for( int i = 0; i < hosts.size(); ++i ) {
             Client c = new Client();
             ConfigurationReader cr = new ConfigurationReader( new File( "config.xml" ) );
 
-            c.start( hosts.get( i ), names.get( i ), cr.getPerformanceCounters(), mk );
+            c.start( port, hosts.get( i ), names.get( i ), cr.getPerformanceCounters(), mk );
         }
         // mk.save( new File( "monkit." + oname.getString() + ".xml" ) );
         mk.save();
     }
 
-    public void start( String host, String clientName, List<PerformanceCounter> counters, MonKit mk ) throws IOException {
+    public void start( int port, String host, String clientName, List<PerformanceCounter> counters, MonKit mk ) throws IOException {
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
 
         try {
-            socket = new Socket( host, Server.port );
+            socket = new Socket( host, port );
             out = new PrintWriter( socket.getOutputStream(), true );
 
         } catch( UnknownHostException e ) {

@@ -14,15 +14,15 @@ public class PerformanceCounterMeter {
     private static String prog = "typeperf";
     private static int numberOfSamples = 1;
     private static int timeInterval = 1; // Seconds
-    
+
     private static Pattern rx_ = Pattern.compile( "^\\\"(.*?)\\\",\\\"(.*?)\\\"$" );
     private static Pattern rx_cc = Pattern.compile( "^\\\\(?i:clearcase)\\\\(.*?)$" );
-    
+
     public enum RequestType {
-	NAMED_COUNTER,
-	SHORT_HAND_COUNTER
+        NAMED_COUNTER, 
+        SHORT_HAND_COUNTER
     }
-    
+
     /**
      * <table style="border-style:solid">
      * <tr>
@@ -56,6 +56,7 @@ public class PerformanceCounterMeter {
      * <td>Optional argument</td>
      * </tr>
      * </table>
+     * 
      * @param request
      * @return
      */
@@ -68,6 +69,7 @@ public class PerformanceCounterMeter {
             /* Is ClearCase!? */
             Matcher m = rx_cc.matcher( request.get( 1 ) );
             if( m.find() ) {
+                System.out.println( "ClearCase stuff" );
                 // String function = m.group(2);
             }
 
@@ -103,7 +105,7 @@ public class PerformanceCounterMeter {
 
         return null;
     }
-    
+
     public static String parseRequest( PerformanceCounter pc ) {
 
         List<String> r = get( pc.counter, pc.numberOfSamples, pc.intervalTime );
@@ -131,16 +133,18 @@ public class PerformanceCounterMeter {
 
         return null;
     }
-    
+
     /**
-     * For a specific performance counter string, get the values for the class given number of samples and interval
+     * For a specific performance counter string, get the values for the class
+     * given number of samples and interval
+     * 
      * @param performanceString
      * @return
      */
     public static List<String> get( String performanceString ) {
-	return get( performanceString, numberOfSamples, timeInterval );
+        return get( performanceString, numberOfSamples, timeInterval );
     }
-    
+
     /**
      * 
      * @param performanceString
@@ -149,32 +153,32 @@ public class PerformanceCounterMeter {
      * @return
      */
     public static List<String> get( String performanceString, int numberOfSamples, int timeInterval ) {
-	String cmd = prog + " -si " + timeInterval + " -sc " + numberOfSamples + " \"" + performanceString + "\"";
-	System.out.print( " " + cmd );
-	try {
-	    CmdResult result = CommandLine.getInstance().run( cmd );
-	    
-	    System.out.println( "\r $" + cmd );
-	    
-	    List<String> list = new ArrayList<String>();
-	    boolean first = true;
-	    
-	    for( String s : result.stdoutList ) {
-		Matcher m = rx_.matcher( s );
-		if( m.find() ) {
-		    if( !first ) {
-			list.add(m.group(2));
-		    } else {
-			first = false;
-		    }
-		}
-	    }
-	    
-	    return list;
-	    
-	} catch( AbnormalProcessTerminationException e ) {
-	    throw new PerformanceCounterException("Could not get " + performanceString + ", " + e.getMessage());
-	}
+        String cmd = prog + " -si " + timeInterval + " -sc " + numberOfSamples + " \"" + performanceString + "\"";
+        System.out.print( " " + cmd );
+        try {
+            CmdResult result = CommandLine.getInstance().run( cmd );
+
+            System.out.println( "\r $" + cmd );
+
+            List<String> list = new ArrayList<String>();
+            boolean first = true;
+
+            for( String s : result.stdoutList ) {
+                Matcher m = rx_.matcher( s );
+                if( m.find() ) {
+                    if( !first ) {
+                        list.add( m.group( 2 ) );
+                    } else {
+                        first = false;
+                    }
+                }
+            }
+
+            return list;
+
+        } catch( AbnormalProcessTerminationException e ) {
+            throw new PerformanceCounterException( "Could not get " + performanceString + ", " + e.getMessage() );
+        }
     }
 
 }
