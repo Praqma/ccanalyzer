@@ -12,6 +12,7 @@ import net.praqma.util.debug.PraqmaLogger;
 import net.praqma.util.debug.PraqmaLogger.Logger;
 
 public class ClearCaseAnalyzer {
+    
     static {
         Cool.setContext( ContextType.CLEARTOOL );
 

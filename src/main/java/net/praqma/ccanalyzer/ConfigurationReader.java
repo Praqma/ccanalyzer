@@ -98,7 +98,7 @@ public class ConfigurationReader extends XML implements Serializable {
             boolean same = false;
             for( ClearCaseCounterConfiguration cc2 : ccounters ) {
                 /* TODO check for more than the name? The actual counter perhaps? */
-                if( cc1.name.equals( cc2.name ) ) {
+                if( cc1.getName().equals( cc2.getName() ) ) {
                     same = true;
                     break;
                 }
@@ -133,7 +133,7 @@ public class ConfigurationReader extends XML implements Serializable {
             boolean same = false;
             for( ClearCaseCounterConfiguration cc2 : ccounters ) {
                 /* TODO check for more than the name? The actual counter perhaps? */
-                if( cc1.name.equals( cc2.name ) ) {
+                if( cc1.getName().equals( cc2.getName() ) ) {
                     same = true;
                     break;
                 }

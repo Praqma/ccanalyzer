@@ -6,13 +6,25 @@ public class ClearCaseCounterConfiguration implements Serializable {
 
     private static final long serialVersionUID = -311929916433574394L;
 
-    String name;
-    String scale;
-    String counter;
+    private String name;
+    private String scale;
+    private ClearCaseCounter counter;
     
     public ClearCaseCounterConfiguration( String name, String scale, String counter ) {
         this.name = name;
         this.scale = scale;
-        this.counter = counter;
+        this.counter = ClearCaseCounter.fromString( counter );
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public String getScale() {
+        return scale;
+    }
+
+    public ClearCaseCounter getCounter() {
+        return counter;
     }
 }

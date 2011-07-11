@@ -7,14 +7,15 @@ public class ClearCaseCounter {
     
     private String modifier;
     private String function;
+    private String counter;
     
-    private static final Pattern rx_ = Pattern.compile( "^\\\\(?i:clearcase)\\((.*?)\\)\\\\(.*?)$" );
+    public static final Pattern rx_ = Pattern.compile( "^\\\\(?i:clearcase)\\((.*?)\\)\\\\(.*?)$" );
     
     public static ClearCaseCounter fromString( String c ) {
         Matcher m = rx_.matcher( c );
         
         if( m.find() ) {
-            return new ClearCaseCounter( m.group(2), m.group(1) );
+            return new ClearCaseCounter( c, m.group(2), m.group(1) );
         } else {
             return null;
         }
@@ -25,9 +26,10 @@ public class ClearCaseCounter {
         System.out.println(ccc);
     }
     
-    public ClearCaseCounter( String function, String modifier ) {
+    public ClearCaseCounter( String counter, String function, String modifier ) {
         this.function = function;
         this.modifier = modifier;
+        this.counter = counter;
     }
 
     public String getModifier() {
@@ -36,6 +38,10 @@ public class ClearCaseCounter {
 
     public String getFunction() {
         return function;
+    }
+    
+    public String getCounter() {
+        return counter;
     }
     
     public String toString() {

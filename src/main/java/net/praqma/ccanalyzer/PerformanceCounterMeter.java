@@ -67,9 +67,9 @@ public class PerformanceCounterMeter {
         case NAMED_COUNTER:
 
             /* Is ClearCase!? */
-            Matcher m = rx_cc.matcher( request.get( 1 ) );
+            Matcher m = ClearCaseCounter.rx_.matcher( request.get( 1 ) );
             if( m.find() ) {
-                System.out.println( "ClearCase stuff" );
+                System.out.println( " $" + request.get( 1 ) );
                 // String function = m.group(2);
                 return "1.0";
             }

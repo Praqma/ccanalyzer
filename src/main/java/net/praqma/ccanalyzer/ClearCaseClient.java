@@ -19,18 +19,18 @@ public class ClearCaseClient extends AbstractClient {
         /* Get the performance counters */
         for( ClearCaseCounterConfiguration ccc : counters.getClearCaseCounters() ) {
             out.println( PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString() );
-            out.println( ccc.counter );
+            out.println( ccc.getCounter().getCounter() );
             out.println( "." );
 
             while( ( line = in.readLine() ) != null ) {
                 break;
             }
 
-            System.out.println( ccc.name + ": " + line + " " + ccc.scale );
+            System.out.println( ccc.getName() + ": " + line + " " + ccc.getScale() );
 
-            monkit.addCategory( ccc.name, ccc.scale );
+            monkit.addCategory( ccc.getName(), ccc.getScale() );
 
-            monkit.add( this.clientName, line, ccc.name );
+            monkit.add( ccc.getCounter().getModifier(), line, ccc.getName() );
         }
     }
     
