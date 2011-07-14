@@ -88,7 +88,7 @@
 		<dependency>
 			<groupId>net.praqma</groupId>
 			<artifactId>COOL</artifactId>
-			<version>0.3.26</version>
+			<version>0.3.27</version>
 		</dependency>
 
 		<dependency>
