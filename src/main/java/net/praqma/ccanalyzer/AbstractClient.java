@@ -56,6 +56,11 @@ public abstract class AbstractClient {
         }
         if( !line.equals( Server.version ) ) {
             System.out.println( "\rError, version mismatch at " + host + "\n" );
+            
+            out.close();
+            in.close();
+            socket.close();
+            
             throw new CCAnalyzerException( "Version mismatch, got " + line + " expected " + Server.version );
         }
         
