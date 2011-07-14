@@ -190,7 +190,7 @@ public class PerformanceCounterMeter {
             return list;
 
         } catch( AbnormalProcessTerminationException e ) {
-            throw new PerformanceCounterException( "Could not get " + performanceString + ", " + e.getMessage() );
+            throw new CCAnalyzerException( "Could not get " + performanceString + ", " + e.getMessage() );
         }
     }
 

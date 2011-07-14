@@ -55,7 +55,7 @@ public abstract class AbstractClient {
         }
         if( line.equals( "0" ) ) {
             System.out.println( "\rError, version mismatch at " + host + "\n" );
-            throw new PerformanceCounterException( "Version mismatch" );
+            throw new CCAnalyzerException( "Version mismatch" );
         }
         
         System.out.println( "\rSuccessfully connected to " + host );

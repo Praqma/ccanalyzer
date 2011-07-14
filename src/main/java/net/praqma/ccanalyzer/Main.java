@@ -78,17 +78,25 @@ public class Main {
         /* If any hosts defined to analyze */
         if( hosts.size() > 0 ) {
             for( int i = 0; i < hosts.size(); ++i ) {
-                PerformanceClient c = new PerformanceClient( port, hosts.get( i ), names.get( i ), mk );
-    
-                c.start( cr );
+                try {
+                    PerformanceClient c = new PerformanceClient( port, hosts.get( i ), names.get( i ), mk );
+        
+                    c.start( cr );
+                } catch( CCAnalyzerException e ) {
+                    System.out.println( "Unable to connect to server: " + e.getMessage() );
+                }
             }
         }
         
         /* Do the ClearCase */
         if( occ.isUsed() ) {
-            ClearCaseClient c = new ClearCaseClient( port, occ.getString(), "CC", mk );
-            
-            c.start( cr );
+            try {
+                ClearCaseClient c = new ClearCaseClient( port, occ.getString(), "CC", mk );
+                
+                c.start( cr );
+            } catch( CCAnalyzerException e ) {
+                System.out.println( "Unable to connect to server: " + e.getMessage() );
+            }
         }
         
         /* Save the MonKit file */
