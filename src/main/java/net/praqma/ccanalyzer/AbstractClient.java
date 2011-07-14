@@ -29,6 +29,7 @@ public abstract class AbstractClient {
         PrintWriter out = null;
         BufferedReader in = null;
         
+        System.out.print( "CCAnalyzer version " + Server.version );
         System.out.print( "Trying to connect to " + host );
 
         try {

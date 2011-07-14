@@ -68,7 +68,7 @@ public class Server {
             ServerSocket listener = new ServerSocket( port );
             Socket client;
 
-            System.out.println( "Server started on port " + port );
+            System.out.println( "Server version " + version + " started on port " + port );
 
             while( true ) {
                 client = listener.accept();
