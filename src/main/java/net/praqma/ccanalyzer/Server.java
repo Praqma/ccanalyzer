@@ -19,7 +19,7 @@ public class Server {
     public static int defaultPort = 44444;
     
     private int counter = 0;
-    public static int version = 1;
+    public static int version = 2;
     public static String textualVersion = "0.2.1";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
