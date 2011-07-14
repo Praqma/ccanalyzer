@@ -129,12 +129,12 @@ public class Server {
 
                 if( !getVersion() ) {
                     System.err.println( "Client version mismatch" );
-                    out.println( 0 );
+                    out.println( version );
                     return;
                 }
                 
                 /* Send ack */
-                out.println( 1 );
+                out.println( 0 );
 
                 boolean running = true;
                 while( running ) {
