@@ -3,24 +3,6 @@
 	     The function is case sensitive!
 	-->
 	<clearcase>
-		<counter name="Number of vobs" scale="number">\clearcase(praqma)\NumberOfVobs</counter>
-		<counter name="Number of vobs" scale="number">\clearcase(triggertest)\NumberOfVobs</counter>
-		
-		<counter name="Number of views" scale="number">\clearcase(praqma)\NumberOfViews</counter>
-		<counter name="Number of views" scale="number">\clearcase(triggertest)\NumberOfViews</counter>
+		<counter name="Number of views" scale="number">\clearcase(triggertest)\NumberOfViewsssss</counter>
 	</clearcase>
-	<performance>
-		<general>
-			<counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available mbytes</counter>
-			<counter samples="1" interval="1" name="Free space" scale="Percentage">\LogicalDisk(C:)\% Free Space</counter>
-			<counter samples="3" interval="1" name="Processor time" scale="seconds">\Processor(_Total)\% privileged time</counter>
-		</general>
-		
-		<specific>
-			<host host="10.10.1.83">
-				<counter samples="1" interval="1" name="Free space" scale="Percentage">\LogicalDisk(e:)\% Free Space</counter>
-				<counter samples="10" interval="1" name="Network traffic" scale="Bytes/sec">\\CC_CLIENT2\Network Interface(VMware Accelerated AMD PCNet Adapter _2)\Bytes Total/sec</counter>
-			</host>
-		</specific>
-	</performance>
 </config>

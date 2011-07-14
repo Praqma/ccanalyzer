@@ -53,67 +53,79 @@ public class ConfigurationReader extends XML implements Serializable {
         }
 
         /* Get the general performance counters */
-        Element pcs = getFirstElement( "performance" );
-        Element gpcs = getFirstElement( pcs, "general" );
-        List<Element> pelements = getElements( gpcs );
-
-        for( Element e : pelements ) {
-            String name = e.getAttribute( "name" );
-            String scale = e.getAttribute( "scale" );
-            String counter = e.getTextContent();
-
-            String samples = e.getAttribute( "samples" );
-            int ns = 1;
-            if( !samples.equals( "" ) ) {
-                ns = Integer.parseInt( samples );
-            }
-
-            String interval = e.getAttribute( "interval" );
-            int i = 1;
-            if( !interval.equals( "" ) ) {
-                i = Integer.parseInt( interval );
-            }
-
-            for( String host : hosts ) {
-                config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
-            }
-        }
+        try {
+            Element pcs = getFirstElement( "performance" );
+            try {
+                Element gpcs = getFirstElement( pcs, "general" );
+                List<Element> pelements = getElements( gpcs );
         
-        /* Get the specific performance counters */
-        Element spcs = getFirstElement( pcs, "specific" );
-        List<Element> hostElements = getElements( spcs );
-
-        /* For all hosts */
-        for( Element e : hostElements ) {
-            
-            List<Element> he = getElements( e );
-            String host = e.getAttribute( "host" );
-
-            if( config.get( host ) == null ) {
-                //System.out.println( "Adding host " + host );
-                config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
+                for( Element e : pelements ) {
+                    String name = e.getAttribute( "name" );
+                    String scale = e.getAttribute( "scale" );
+                    String counter = e.getTextContent();
+        
+                    String samples = e.getAttribute( "samples" );
+                    int ns = 1;
+                    if( !samples.equals( "" ) ) {
+                        ns = Integer.parseInt( samples );
+                    }
+        
+                    String interval = e.getAttribute( "interval" );
+                    int i = 1;
+                    if( !interval.equals( "" ) ) {
+                        i = Integer.parseInt( interval );
+                    }
+        
+                    for( String host : hosts ) {
+                        config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+                    }
+                }
+            } catch( Exception e ) {
+                /* No op */
             }
             
-            /* For all counters in host */
-            for( Element hostCounter : he ) {
-                String name = hostCounter.getAttribute( "name" );
-                String scale = hostCounter.getAttribute( "scale" );
-                String counter = hostCounter.getTextContent();
-    
-                String samples = hostCounter.getAttribute( "samples" );
-                int ns = 1;
-                if( !samples.equals( "" ) ) {
-                    ns = Integer.parseInt( samples );
+            /* Get the specific performance counters */
+            try {
+                Element spcs = getFirstElement( pcs, "specific" );
+                List<Element> hostElements = getElements( spcs );
+        
+                /* For all hosts */
+                for( Element e : hostElements ) {
+                    
+                    List<Element> he = getElements( e );
+                    String host = e.getAttribute( "host" );
+        
+                    if( config.get( host ) == null ) {
+                        //System.out.println( "Adding host " + host );
+                        config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
+                    }
+                    
+                    /* For all counters in host */
+                    for( Element hostCounter : he ) {
+                        String name = hostCounter.getAttribute( "name" );
+                        String scale = hostCounter.getAttribute( "scale" );
+                        String counter = hostCounter.getTextContent();
+            
+                        String samples = hostCounter.getAttribute( "samples" );
+                        int ns = 1;
+                        if( !samples.equals( "" ) ) {
+                            ns = Integer.parseInt( samples );
+                        }
+            
+                        String interval = e.getAttribute( "interval" );
+                        int i = 1;
+                        if( !interval.equals( "" ) ) {
+                            i = Integer.parseInt( interval );
+                        }
+            
+                        config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+                    }
                 }
-    
-                String interval = e.getAttribute( "interval" );
-                int i = 1;
-                if( !interval.equals( "" ) ) {
-                    i = Integer.parseInt( interval );
-                }
-    
-                config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+            } catch( Exception e ) {
+                /* No op */
             }
+        } catch( Exception e ) {
+            /* No op */
         }
     }
 
