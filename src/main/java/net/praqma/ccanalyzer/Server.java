@@ -19,8 +19,8 @@ public class Server {
     public static int defaultPort = 44444;
     
     private int counter = 0;
-    public static int version = 3;
-    public static String textualVersion = "0.2.1";
+    public static int version = 4;
+    public static String textualVersion = "0.2.2";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
 
