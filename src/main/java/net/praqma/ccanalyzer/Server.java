@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +25,8 @@ public class Server {
     public static String textualVersion = "0.2.2";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
+    
+    private static final SimpleDateFormat SDF = new SimpleDateFormat( "yyyy-MM-dd hh:mm:ss" );
 
     public static void main( String[] args ) {
 
@@ -68,11 +72,11 @@ public class Server {
             ServerSocket listener = new ServerSocket( port );
             Socket client;
 
-            System.out.println( "Server version " + version + " started on port " + port );
+            System.out.println( "Server version " + version + " started on port " + port + " - "+ SDF.format( Calendar.getInstance().getTime() ) );
 
             while( true ) {
                 client = listener.accept();
-                System.out.println( "Accepted client from " + client );
+                System.out.println( "Accepted client from " + client + " " + SDF.format( Calendar.getInstance().getTime() ) );
                 T connection = new T( client );
                 Thread t = new Thread( connection );
                 t.start();
