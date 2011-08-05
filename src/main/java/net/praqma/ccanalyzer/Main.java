@@ -87,7 +87,12 @@ public class Main {
         }
         
         if( o.isVerbose() ) System.out.println("Site: " + osite.getString());
-        cr.initialize( hosts, names, osite.getString(), "" );
+        try {
+        	cr.initialize( hosts, names, osite.getString(), "" );
+        } catch( CCAnalyzerException e ) {
+            System.err.println( "Could not initialize configuration: " + e.getMessage() );
+            System.exit( 1 );
+        }
 
         /* If any hosts defined to analyze */
         if( hosts.size() > 0 ) {
