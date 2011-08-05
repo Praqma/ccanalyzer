@@ -22,7 +22,8 @@ public class Main {
         Option oport = new Option( "port", "p", false, 1, "The port, default is 44444" );
         Option ohost = new Option( "host", "H", false, -1, "The host name/IP" );
         Option oname = new Option( "name", "n", false, -1, "The name/title" );
-        Option occ   = new Option( "clearcase", "C", false, -1, "The ClearCase host" );
+        Option osite = new Option( "site", "s", false, 1, "Use a named configuration defined site" );
+        Option occ   = new Option( "clearcase", "C", false, 1, "The ClearCase host" );
         Option ofile = new Option( "file", "f", false, 1, "The name of the MonKit file output" );
         Option oconf = new Option( "config", "c", false, 1, "The config file, default is config.xml" );
 
@@ -31,6 +32,7 @@ public class Main {
         o.setOption( ofile );
         o.setOption( oconf );
         o.setOption( occ );
+        o.setOption( osite );
 
         o.setDefaultOptions();
 
@@ -67,7 +69,7 @@ public class Main {
 	            System.err.println( "The number of hosts must the same as the number of names." );
 	            System.exit( 1 );
 	        }
-        } else {
+	    } else {
         	if( o.isVerbose() ) System.out.println("Using config defined hosts");
         	hosts = new ArrayList<String>();
         	names = new ArrayList<String>();
@@ -84,7 +86,8 @@ public class Main {
             cr = new ConfigurationReader( new File( "config.xml" ) );
         }
         
-        cr.initialize( hosts, names, "" );
+        if( o.isVerbose() ) System.out.println("Site: " + osite.getString());
+        cr.initialize( hosts, names, osite.getString(), "" );
 
         /* If any hosts defined to analyze */
         if( hosts.size() > 0 ) {

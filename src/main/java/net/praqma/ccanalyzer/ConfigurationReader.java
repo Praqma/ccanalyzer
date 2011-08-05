@@ -32,7 +32,7 @@ public class ConfigurationReader extends XML implements Serializable {
         //System.out.println("XML= " + this.getXML() );
     }
     
-    public void initialize( List<String> hosts, List<String> names, String ccHost) {
+    public void initialize( List<String> hosts, List<String> names, String site, String ccHost) {
         
         /* Get the ClearCase counters */
         if( ccHost != null ) {
@@ -50,12 +50,24 @@ public class ConfigurationReader extends XML implements Serializable {
         
         /* Not given, find the config hosts */
         if( hosts.size() == 0 ) {
-        	Element ehs = getFirstElement( "hosts" );
-            List<Element> ehosts = getElements( ehs );
-            for(Element e : ehosts) {
-            	hosts.add( e.getTextContent() );
-            	names.add( e.getAttribute( "name" ) );
-            }
+        	if( site == null ) {
+        		System.out.println( "Using list of hosts");
+	        	Element ehs = getFirstElement( "hosts" );
+	            List<Element> ehosts = getElements( ehs );
+	            for(Element e : ehosts) {
+	            	hosts.add( e.getTextContent() );
+	            	names.add( e.getAttribute( "name" ) );
+	            }
+        	} else {
+        		System.out.println( "Using site " + site);
+	        	Element esites = getFirstElement( "sites" );
+	            List<Element> esitesList = getElementsWithAttribute( esites, "name", site );
+	            List<Element> esiteList = getElements( esitesList.get( 0 ) );
+	            for(Element e : esiteList) {
+	            	hosts.add( e.getTextContent() );
+	            	names.add( e.getAttribute( "name" ) );
+	            }
+        	}
         }
         
         for( String host : hosts ) {

@@ -26,7 +26,7 @@ public class PerformanceClient extends AbstractClient {
             out.println( pc.intervalTime );
             out.println( "." );
             
-            System.out.print( pc.name + ": " );
+            System.out.print( "* " + pc.name + ": " );
 
             while( ( line = in.readLine() ) != null ) {
                 break;

@@ -24,6 +24,8 @@ public class ClearCaseClient extends AbstractClient {
             out.println( ccc.getCounter().getCounter() );
             out.println( "." );
 
+            System.out.print( "* " + ccc.getName() + "(" + ccc.getCounter().getModifier() + "): " );
+            
             while( ( line = in.readLine() ) != null ) {
                 break;
             }
@@ -33,7 +35,7 @@ public class ClearCaseClient extends AbstractClient {
                 System.err.println( "Erroneous result" );
             } else {
 
-                System.out.println( ccc.getName() + "(" + ccc.getCounter().getModifier() + "): " + line + " " + ccc.getScale() );
+                System.out.println( line + " " + ccc.getScale() );
     
                 monkit.addCategory( ccc.getName(), ccc.getScale() );
     

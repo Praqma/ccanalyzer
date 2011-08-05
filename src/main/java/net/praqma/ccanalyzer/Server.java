@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
+import net.praqma.util.time.Time;
 
 public class Server {
 
@@ -27,6 +28,16 @@ public class Server {
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
     
     private static final SimpleDateFormat SDF = new SimpleDateFormat( "yyyy-MM-dd hh:mm:ss" );
+    
+    private static long live = 0;
+    
+    static class MyShutdown extends Thread {
+        public void run() {
+        	long now = Calendar.getInstance().getTimeInMillis();
+        	long diff = now - live;
+            System.out.println("Server terminated. Time live: " + Time.longToTime( diff ) );
+        }
+    }
 
     public static void main( String[] args ) {
 
@@ -51,11 +62,18 @@ public class Server {
             o.display();
             System.exit( 1 );
         }
+        
+        live = Calendar.getInstance().getTimeInMillis();
 
         Integer port = defaultPort;
         if( oport.isUsed() ) {
             port = oport.getInteger();
         }
+        
+        live = Calendar.getInstance().getTimeInMillis();
+        
+        MyShutdown sh = new MyShutdown();
+        Runtime.getRuntime().addShutdownHook(sh);
 
         Server s = new Server();
         s.start(port);
@@ -144,6 +162,7 @@ public class Server {
 
                 boolean running = true;
                 while( running ) {
+
                     request.clear();
                     while( ( line = in.readLine() ) != null && !line.equals( "." ) ) {
                         if( line.equalsIgnoreCase( "exit" ) ) {
