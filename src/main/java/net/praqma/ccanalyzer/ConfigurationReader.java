@@ -29,9 +29,10 @@ public class ConfigurationReader extends XML implements Serializable {
         super( conf );
         
         //initialize();
+        //System.out.println("XML= " + this.getXML() );
     }
     
-    public void initialize( List<String> hosts, String ccHost) {
+    public void initialize( List<String> hosts, List<String> names, String ccHost) {
         
         /* Get the ClearCase counters */
         if( ccHost != null ) {
@@ -44,6 +45,20 @@ public class ConfigurationReader extends XML implements Serializable {
                 String counter = e.getTextContent();
     
                 ccounters.add( new ClearCaseCounterConfiguration( name, scale, counter ) );
+            }
+        }
+        
+        /* Not given, find the config hosts */
+        if( hosts.size() == 0 ) {
+        	System.out.println("No hosts defined");
+        	Element ehs = getFirstElement( "hosts" );
+        	System.out.println("ehs=" + ehs);
+            List<Element> ehosts = getElements( ehs );
+            System.out.println("Elements= " + ehosts.size());
+            for(Element e : ehosts) {
+            	System.out.println("E=" + e.getTagName());
+            	hosts.add( e.getTextContent() );
+            	names.add( e.getAttribute( "name" ) );
             }
         }
         

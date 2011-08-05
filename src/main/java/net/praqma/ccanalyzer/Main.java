@@ -2,6 +2,7 @@ package net.praqma.ccanalyzer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.praqma.monkit.MonKit;
@@ -19,8 +20,8 @@ public class Main {
         Options o = new Options( Server.textualVersion );
 
         Option oport = new Option( "port", "p", false, 1, "The port, default is 44444" );
-        Option ohost = new Option( "host", "H", true, -1, "The host name/IP" );
-        Option oname = new Option( "name", "n", true, -1, "The name/title" );
+        Option ohost = new Option( "host", "H", false, -1, "The host name/IP" );
+        Option oname = new Option( "name", "n", false, -1, "The name/title" );
         Option occ   = new Option( "clearcase", "C", false, -1, "The ClearCase host" );
         Option ofile = new Option( "file", "f", false, 1, "The name of the MonKit file output" );
         Option oconf = new Option( "config", "c", false, 1, "The config file, default is config.xml" );
@@ -55,12 +56,21 @@ public class Main {
             port = oport.getInteger();
         }
 
-        List<String> hosts = ohost.getStrings();
-        List<String> names = oname.getStrings();
-
-        if( hosts.size() != names.size() ) {
-            System.err.println( "The number of hosts must the same as the number of names." );
-            System.exit( 1 );
+        List<String> hosts = null;
+        List<String> names = null;
+        if( ohost.isUsed() && oname.isUsed() ) {
+        	System.out.println("Using CLI defined hosts");
+	        hosts = ohost.getStrings();
+	        names = oname.getStrings();
+	
+	        if( hosts.size() != names.size() ) {
+	            System.err.println( "The number of hosts must the same as the number of names." );
+	            System.exit( 1 );
+	        }
+        } else {
+        	System.out.println("Using config defined hosts");
+        	hosts = new ArrayList<String>();
+        	names = new ArrayList<String>();
         }
 
         MonKit mk = new MonKit();
@@ -68,12 +78,13 @@ public class Main {
         ConfigurationReader cr = null;
         
         if( oconf.isUsed() ) {
+        	System.out.println("Using configuration file " + oconf.getString());
             cr = new ConfigurationReader( new File( oconf.getString() ) );
         } else {
             cr = new ConfigurationReader( new File( "config.xml" ) );
         }
         
-        cr.initialize( hosts, "" );
+        cr.initialize( hosts, names, "" );
 
         /* If any hosts defined to analyze */
         if( hosts.size() > 0 ) {
