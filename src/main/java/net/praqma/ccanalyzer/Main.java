@@ -59,7 +59,7 @@ public class Main {
         List<String> hosts = null;
         List<String> names = null;
         if( ohost.isUsed() && oname.isUsed() ) {
-        	System.out.println("Using CLI defined hosts");
+        	if( o.isVerbose() ) System.out.println("Using CLI defined hosts");
 	        hosts = ohost.getStrings();
 	        names = oname.getStrings();
 	
@@ -68,7 +68,7 @@ public class Main {
 	            System.exit( 1 );
 	        }
         } else {
-        	System.out.println("Using config defined hosts");
+        	if( o.isVerbose() ) System.out.println("Using config defined hosts");
         	hosts = new ArrayList<String>();
         	names = new ArrayList<String>();
         }
@@ -78,7 +78,7 @@ public class Main {
         ConfigurationReader cr = null;
         
         if( oconf.isUsed() ) {
-        	System.out.println("Using configuration file " + oconf.getString());
+        	if( o.isVerbose() ) System.out.println("Using configuration file " + oconf.getString());
             cr = new ConfigurationReader( new File( oconf.getString() ) );
         } else {
             cr = new ConfigurationReader( new File( "config.xml" ) );

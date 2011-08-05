@@ -50,13 +50,9 @@ public class ConfigurationReader extends XML implements Serializable {
         
         /* Not given, find the config hosts */
         if( hosts.size() == 0 ) {
-        	System.out.println("No hosts defined");
         	Element ehs = getFirstElement( "hosts" );
-        	System.out.println("ehs=" + ehs);
             List<Element> ehosts = getElements( ehs );
-            System.out.println("Elements= " + ehosts.size());
             for(Element e : ehosts) {
-            	System.out.println("E=" + e.getTagName());
             	hosts.add( e.getTextContent() );
             	names.add( e.getAttribute( "name" ) );
             }
