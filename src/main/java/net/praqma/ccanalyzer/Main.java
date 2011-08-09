@@ -86,14 +86,16 @@ public class Main {
             cr = new ConfigurationReader( new File( "config.xml" ) );
         }
         
+        String ccclient = null;
+        
         if( o.isVerbose() ) System.out.println("Site: " + osite.getString());
         try {
-        	cr.initialize( hosts, names, osite.getString(), "" );
+        	ccclient = cr.initialize( hosts, names, osite.getString() );
         } catch( CCAnalyzerException e ) {
             System.err.println( "Could not initialize configuration: " + e.getMessage() );
             System.exit( 1 );
         }
-
+        
         /* If any hosts defined to analyze */
         if( hosts.size() > 0 ) {
             for( int i = 0; i < hosts.size(); ++i ) {
@@ -108,9 +110,10 @@ public class Main {
         }
         
         /* Do the ClearCase */
-        if( occ.isUsed() ) {
+        ccclient = ( occ.isUsed() ? occ.getString() : ccclient );
+        if( ccclient != null ) {
             try {
-                ClearCaseClient c = new ClearCaseClient( port, occ.getString(), "CC", mk );
+                ClearCaseClient c = new ClearCaseClient( port, ccclient, "CC", mk );
                 
                 c.start( cr );
             } catch( CCAnalyzerException e ) {
