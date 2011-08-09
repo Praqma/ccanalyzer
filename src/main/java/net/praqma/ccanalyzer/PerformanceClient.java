@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
 
 public class PerformanceClient extends AbstractClient {
@@ -12,7 +13,7 @@ public class PerformanceClient extends AbstractClient {
         super( port, host, clientName, mk );
     }
 
-    protected void perform( ConfigurationReader counters, PrintWriter out, BufferedReader in ) throws IOException {
+    protected void perform( Configuration counters, PrintWriter out, BufferedReader in ) throws IOException {
         
         String line = "";
         

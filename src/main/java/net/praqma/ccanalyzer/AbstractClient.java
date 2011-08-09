@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
 
 public abstract class AbstractClient {
@@ -26,7 +27,7 @@ public abstract class AbstractClient {
     }
         
 
-    public void start( ConfigurationReader counters ) throws IOException {
+    public void start( Configuration counters ) throws IOException {
         Socket socket = null;
         PrintWriter out = null;
         BufferedReader in = null;
@@ -79,6 +80,6 @@ public abstract class AbstractClient {
         System.out.println( "Disconnected\n" );
     }
     
-    protected abstract void perform( ConfigurationReader counters, PrintWriter out, BufferedReader in ) throws IOException;
+    protected abstract void perform( Configuration counters, PrintWriter out, BufferedReader in ) throws IOException;
 
 }

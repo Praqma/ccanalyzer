@@ -2,13 +2,14 @@ package net.praqma.ccanalyzer;
 
 import java.io.IOException;
 
+import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
 
 public class ConfigurationRunner {
     
-    ConfigurationReader cr;
+    Configuration cr;
     
-    public ConfigurationRunner( ConfigurationReader cr ) throws IOException {
+    public ConfigurationRunner( Configuration cr ) throws IOException {
         this.cr = cr;
     }
     

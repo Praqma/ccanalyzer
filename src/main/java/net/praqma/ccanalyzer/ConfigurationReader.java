@@ -16,11 +16,12 @@ public class ConfigurationReader extends XML implements Serializable {
 
     private static final long serialVersionUID = 3648821402865625037L;
 
-    List<ClearCaseCounterConfiguration> ccounters = new ArrayList<ClearCaseCounterConfiguration>();
-    List<PerformanceCounterConfiguration> pcounters = new ArrayList<PerformanceCounterConfiguration>();
+    //List<ClearCaseCounterConfiguration> ccounters = new ArrayList<ClearCaseCounterConfiguration>();
+    //Map<String, Map<String, PerformanceCounterConfiguration>> config = new HashMap<String, Map<String, PerformanceCounterConfiguration>>();
     
+    //List<PerformanceCounterConfiguration> pcounters = new ArrayList<PerformanceCounterConfiguration>();
     //Map<String, List<PerformanceCounterConfiguration>> config = new HashMap<String, List<PerformanceCounterConfiguration>>();
-    Map<String, Map<String, PerformanceCounterConfiguration>> config = new HashMap<String, Map<String, PerformanceCounterConfiguration>>();
+
     
     public ConfigurationReader() {
     }
@@ -32,9 +33,27 @@ public class ConfigurationReader extends XML implements Serializable {
         //System.out.println("XML= " + this.getXML() );
     }
     
-    public String initialize( List<String> hosts, List<String> names, String site ) throws CCAnalyzerException {
+    public List<String> getSites() {
+		Element esites = null;
+		try {
+			esites = getFirstElement( "sites" );
+		} catch( Exception e ) {
+			throw new CCAnalyzerException( "<sites> does not exist." );
+		}
+		
+        List<Element> esiteList = getElements( esites, "site" );
+        List<String> sites = new ArrayList<String>();
+        for(Element e : esiteList) {
+        	sites.add( e.getAttribute( "name" ) );
+        }
+        
+        return sites;
+    }
+    
+    public Configuration getConfiguration( List<String> hosts, List<String> names, String site ) throws CCAnalyzerException {
         
     	String ccHost = null;
+    	Configuration p = new Configuration(site);
     	
         /* Not given, find the config hosts */
         if( hosts.size() == 0 ) {
@@ -46,16 +65,12 @@ public class ConfigurationReader extends XML implements Serializable {
         			throw new CCAnalyzerException( "No site or hosts given, but <hosts> did not exist." );
         		}
         		
+        		ccHost = ehs.getAttribute( "clearcase" );
+        		
 	            List<Element> ehosts = getElements( ehs );
 	            for(Element e : ehosts) {
 	            	hosts.add( e.getTextContent() );
 	            	names.add( e.getAttribute( "name" ) );
-	            	
-	            	/* Indication of a clearcase host */
-	            	String cc = e.getAttribute( "clearcase" );
-	            	if( cc.length() > 0 ) {
-	            		ccHost = e.getTextContent();
-	            	}
 	            }
         	} else {
         		Element esites = null;
@@ -69,16 +84,14 @@ public class ConfigurationReader extends XML implements Serializable {
 	            if( esitesList.size() == 0 ) {
 	            	throw new CCAnalyzerException( "Unkown site " + site );
 	            }
+	            
+	            ccHost = esitesList.get( 0 ).getAttribute( "clearcase" );
+	            
 	            List<Element> esiteList = getElements( esitesList.get( 0 ) );
 	            for(Element e : esiteList) {
 	            	hosts.add( e.getTextContent() );
 	            	names.add( e.getAttribute( "name" ) );
-	            	
-	            	/* Indication of a clearcase host */
-	            	String cc = e.getAttribute( "clearcase" );
-	            	if( cc.length() > 0 ) {
-	            		ccHost = e.getTextContent();
-	            	}
+
 	            }
         	}
         }
@@ -94,7 +107,7 @@ public class ConfigurationReader extends XML implements Serializable {
                 String scale = e.getAttribute( "scale" );
                 String counter = e.getTextContent();
     
-                ccounters.add( new ClearCaseCounterConfiguration( name, scale, counter ) );
+                p.ccounters.add( new ClearCaseCounterConfiguration( name, scale, counter ) );
             }
         } catch( Exception e ) {
         	/* No clearcase stuff */
@@ -102,7 +115,7 @@ public class ConfigurationReader extends XML implements Serializable {
         
         for( String host : hosts ) {
             //System.out.println( "Adding host " + host );
-            config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
+        	p.config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
         }
 
         /* Get the general performance counters */
@@ -130,7 +143,7 @@ public class ConfigurationReader extends XML implements Serializable {
                     }
         
                     for( String host : hosts ) {
-                        config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+                    	p.config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
                     }
                 }
             } catch( Exception e ) {
@@ -148,9 +161,9 @@ public class ConfigurationReader extends XML implements Serializable {
                     List<Element> he = getElements( e );
                     String host = e.getAttribute( "host" );
         
-                    if( config.get( host ) == null ) {
+                    if( p.config.get( host ) == null ) {
                         //System.out.println( "Adding host " + host );
-                        config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
+                    	p.config.put( host, new HashMap<String, PerformanceCounterConfiguration>() );
                     }
                     
                     /* For all counters in host */
@@ -171,7 +184,7 @@ public class ConfigurationReader extends XML implements Serializable {
                             i = Integer.parseInt( interval );
                         }
             
-                        config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
+                        p.config.get( host ).put( name, new PerformanceCounterConfiguration( name, scale, counter, ns, i ) );
                     }
                 }
             } catch( Exception e ) {
@@ -181,9 +194,58 @@ public class ConfigurationReader extends XML implements Serializable {
             /* No op */
         }
         
-        return ccHost;
+        if( ccHost != null && ccHost.length() > 0 ) {
+        	p.clearcaseHost = ccHost;
+        }
+        
+        p.hosts = hosts;
+        p.names = names;
+        
+        return p;
+    }
+    
+    public class Configuration{
+        List<ClearCaseCounterConfiguration> ccounters = new ArrayList<ClearCaseCounterConfiguration>();
+        Map<String, Map<String, PerformanceCounterConfiguration>> config = new HashMap<String, Map<String, PerformanceCounterConfiguration>>();
+        
+        List<String> hosts = new ArrayList<String>();
+        List<String> names = new ArrayList<String>();
+        
+        String clearcaseHost = null;
+        
+        private String site;
+        
+        public Configuration( String site ) {
+        	this.site = site;
+        }
+        
+        public List<PerformanceCounterConfiguration> getPerformanceCounters( String host ) {
+            Map<String, PerformanceCounterConfiguration> c = config.get( host );
+            return new ArrayList<PerformanceCounterConfiguration>(c.values());
+        }
+        
+        public List<ClearCaseCounterConfiguration> getClearCaseCounters() {
+            return ccounters;
+        }
+        
+        public List<String> getHosts() {
+        	return hosts;
+        }
+        
+        public List<String> getNames() {
+        	return names;
+        }
+        
+        public String getClearcaseHost() {
+        	return clearcaseHost;
+        }
+        
+        public String getSite() {
+        	return site;
+        }
     }
 
+    /*
     public List<PerformanceCounterConfiguration> getPerformanceCounters( String host ) {
         Map<String, PerformanceCounterConfiguration> c = config.get( host );
         return new ArrayList<PerformanceCounterConfiguration>(c.values());
@@ -192,79 +254,9 @@ public class ConfigurationReader extends XML implements Serializable {
     public List<ClearCaseCounterConfiguration> getClearCaseCounters() {
         return ccounters;
     }
+    */
     
-    public void addPerformanceCounters( List<PerformanceCounterConfiguration> pcs ) {
-        /* Check the performance counters */
-        for( PerformanceCounterConfiguration pc1 : pcs ) {
-            boolean same = false;
-            for( PerformanceCounterConfiguration pc2 : pcounters ) {
-                /* TODO check for more than the name? The actual counter perhaps? */
-                if( pc1.name.equals( pc2.name ) ) {
-                    same = true;
-                    break;
-                }
-            }
-            
-            if( !same ) {
-                pcounters.add( pc1 );
-            }
-        }
-    }
-    
-    
-    public void addClearCaseCounters( List<ClearCaseCounterConfiguration> ccs ) {
-        /* Check the ClearCase counters */
-        for( ClearCaseCounterConfiguration cc1 : ccs ) {
-            boolean same = false;
-            for( ClearCaseCounterConfiguration cc2 : ccounters ) {
-                /* TODO check for more than the name? The actual counter perhaps? */
-                if( cc1.getName().equals( cc2.getName() ) ) {
-                    same = true;
-                    break;
-                }
-            }
-            
-            if( !same ) {
-                ccounters.add( cc1 );
-            }
-        }
-    }
-    
-    public void addFrom( ConfigurationReader cr ) {
-        
-        /* Check the performance counters */
-        for( PerformanceCounterConfiguration pc1 : cr.getPerformanceCounters( "" ) ) { // TODO This shold be a host, not an empty string
-            boolean same = false;
-            for( PerformanceCounterConfiguration pc2 : pcounters ) {
-                /* TODO check for more than the name? The actual counter perhaps? */
-                if( pc1.name.equals( pc2.name ) ) {
-                    same = true;
-                    break;
-                }
-            }
-            
-            if( !same ) {
-                pcounters.add( pc1 );
-            }
-        }
-        
-        /* Check the ClearCase counters */
-        for( ClearCaseCounterConfiguration cc1 : cr.getClearCaseCounters() ) {
-            boolean same = false;
-            for( ClearCaseCounterConfiguration cc2 : ccounters ) {
-                /* TODO check for more than the name? The actual counter perhaps? */
-                if( cc1.getName().equals( cc2.getName() ) ) {
-                    same = true;
-                    break;
-                }
-            }
-            
-            if( !same ) {
-                ccounters.add( cc1 );
-            }
-        }
-    }
-    
+    /*
     public String toString() {
         StringBuffer sb = new StringBuffer();
         
@@ -274,5 +266,82 @@ public class ConfigurationReader extends XML implements Serializable {
         
         return sb.toString();
     }
+    */
+    
+    
+//    
+//    public void addPerformanceCounters( List<PerformanceCounterConfiguration> pcs ) {
+//        /* Check the performance counters */
+//        for( PerformanceCounterConfiguration pc1 : pcs ) {
+//            boolean same = false;
+//            for( PerformanceCounterConfiguration pc2 : pcounters ) {
+//                /* TODO check for more than the name? The actual counter perhaps? */
+//                if( pc1.name.equals( pc2.name ) ) {
+//                    same = true;
+//                    break;
+//                }
+//            }
+//            
+//            if( !same ) {
+//                pcounters.add( pc1 );
+//            }
+//        }
+//    }
+//    
+//    
+//    public void addClearCaseCounters( List<ClearCaseCounterConfiguration> ccs ) {
+//        /* Check the ClearCase counters */
+//        for( ClearCaseCounterConfiguration cc1 : ccs ) {
+//            boolean same = false;
+//            for( ClearCaseCounterConfiguration cc2 : ccounters ) {
+//                /* TODO check for more than the name? The actual counter perhaps? */
+//                if( cc1.getName().equals( cc2.getName() ) ) {
+//                    same = true;
+//                    break;
+//                }
+//            }
+//            
+//            if( !same ) {
+//                ccounters.add( cc1 );
+//            }
+//        }
+//    }
+//    
+//    public void addFrom( ConfigurationReader cr ) {
+//        
+//        /* Check the performance counters */
+//        for( PerformanceCounterConfiguration pc1 : cr.getPerformanceCounters( "" ) ) { // TODO This shold be a host, not an empty string
+//            boolean same = false;
+//            for( PerformanceCounterConfiguration pc2 : pcounters ) {
+//                /* TODO check for more than the name? The actual counter perhaps? */
+//                if( pc1.name.equals( pc2.name ) ) {
+//                    same = true;
+//                    break;
+//                }
+//            }
+//            
+//            if( !same ) {
+//                pcounters.add( pc1 );
+//            }
+//        }
+//        
+//        /* Check the ClearCase counters */
+//        for( ClearCaseCounterConfiguration cc1 : cr.getClearCaseCounters() ) {
+//            boolean same = false;
+//            for( ClearCaseCounterConfiguration cc2 : ccounters ) {
+//                /* TODO check for more than the name? The actual counter perhaps? */
+//                if( cc1.getName().equals( cc2.getName() ) ) {
+//                    same = true;
+//                    break;
+//                }
+//            }
+//            
+//            if( !same ) {
+//                ccounters.add( cc1 );
+//            }
+//        }
+//    }
+    
+
 
 }

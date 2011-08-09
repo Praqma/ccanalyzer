@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
@@ -23,6 +24,7 @@ public class Main {
         Option ohost = new Option( "host", "H", false, -1, "The host name/IP" );
         Option oname = new Option( "name", "n", false, -1, "The name/title" );
         Option osite = new Option( "site", "s", false, 1, "Use a named configuration defined site" );
+        Option oasit = new Option( "sites", "S", false, 0, "Execute CCAnalyzer using all configured sites" );
         Option occ   = new Option( "clearcase", "C", false, 1, "The ClearCase host" );
         Option ofile = new Option( "file", "f", false, 1, "The name of the MonKit file output" );
         Option oconf = new Option( "config", "c", false, 1, "The config file, default is config.xml" );
@@ -33,10 +35,11 @@ public class Main {
         o.setOption( oconf );
         o.setOption( occ );
         o.setOption( osite );
+        o.setOption( oasit );
 
         o.setDefaultOptions();
 
-        o.setSyntax( "Main [-p <port number>] [-H <list of hosts>] [-n <list of names>] [-C <host of the ClearCase server] [-c <path to config>]" );
+        o.setSyntax( "Main [-p <port number>] [-H <list of hosts>] [-n <list of names>] [-C <host of the ClearCase server] [-c <path to config>] [-s <site>] [-S]" );
         o.setHeader( "Query a CCAnalyser server" );
         String desc = "Given a set of hosts and a set of names(there's a one to one correspondence between hosts and names),\n" +
                       "the hosts a queried for a configured set of performance and/or ClearCase counters.\n\nFx Main -H 127.0.0.1 10.10.1.83 -n localhost CC_CLIENT2 -c \"c:\\config.xml\"\n\n" +
@@ -86,39 +89,60 @@ public class Main {
             cr = new ConfigurationReader( new File( "config.xml" ) );
         }
         
-        String ccclient = null;
-        
-        if( o.isVerbose() ) System.out.println("Site: " + osite.getString());
+        Configuration[] confs = null;
+
         try {
-        	ccclient = cr.initialize( hosts, names, osite.getString() );
+        	if( oasit.isUsed() ) {
+        		List<String> sites = cr.getSites();
+        		confs = new Configuration[sites.size()];
+        		System.out.println( "Sites: " + cr.getSites() );
+        		for( int i = 0 ; i < sites.size() ; i++ ) {
+                	hosts = new ArrayList<String>();
+                	names = new ArrayList<String>();
+                	
+        			confs[i] = cr.getConfiguration( hosts, names, sites.get( i ) );
+        		}
+        		
+        	} else {
+        		confs = new Configuration[1];
+        		confs[0] = cr.getConfiguration( hosts, names, osite.getString() );
+        	}
         } catch( CCAnalyzerException e ) {
             System.err.println( "Could not initialize configuration: " + e.getMessage() );
             System.exit( 1 );
         }
         
-        /* If any hosts defined to analyze */
-        if( hosts.size() > 0 ) {
-            for( int i = 0; i < hosts.size(); ++i ) {
-                try {
-                    PerformanceClient c = new PerformanceClient( port, hosts.get( i ), names.get( i ), mk );
-        
-                    c.start( cr );
-                } catch( CCAnalyzerException e ) {
-                    System.out.println( "Unable to connect to server: " + e.getMessage() );
-                }
-            }
-        }
-        
-        /* Do the ClearCase */
-        ccclient = ( occ.isUsed() ? occ.getString() : ccclient );
-        if( ccclient != null ) {
-            try {
-                ClearCaseClient c = new ClearCaseClient( port, ccclient, "CC", mk );
-                
-                c.start( cr );
-            } catch( CCAnalyzerException e ) {
-                System.out.println( "Unable to connect to server: " + e.getMessage() );
-            }
+        for( Configuration conf : confs ) {
+	        
+        	if( conf.getSite() != null ) {
+        		System.out.println( "Site: " + conf.getSite() + "\n----------------" );
+        	}
+        	
+	        /* If any hosts defined to analyze */
+	        if( hosts.size() > 0 ) {
+	            for( int i = 0; i < hosts.size(); ++i ) {
+	                try {
+	                    PerformanceClient c = new PerformanceClient( port, conf.getHosts().get( i ), conf.getNames().get( i ), mk );
+	        
+	                    c.start( conf );
+	                } catch( CCAnalyzerException e ) {
+	                    System.out.println( "Unable to connect to server: " + e.getMessage() );
+	                }
+	            }
+	        }
+	        
+	        /* Do the ClearCase */
+	        String ccHost = ( occ.isUsed() ? occ.getString() : conf.getClearcaseHost() );
+	        if( ccHost != null ) {
+	            try {
+	                ClearCaseClient c = new ClearCaseClient( port, ccHost, "CC", mk );
+	                
+	                c.start( conf );
+	            } catch( CCAnalyzerException e ) {
+	                System.out.println( "Unable to connect to server: " + e.getMessage() );
+	            }
+	        }
+
         }
         
         /* Save the MonKit file */
