@@ -3,6 +3,7 @@ package net.praqma.ccanalyzer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,9 +11,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.praqma.ccanalyzer.util.Timer;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
 import net.praqma.util.time.Time;
@@ -108,12 +118,15 @@ public class Server {
         System.out.println( "Server is stopping." );
     }
 
-    public class T implements Runnable {
+    public class T extends Thread {
 
         private Socket server;
 
         private PrintWriter out = null;
         private BufferedReader in = null;
+        
+        private int limit = 5000;
+        private int step  = 100;
 
         public T( Socket server ) {
             this.server = server;
@@ -139,6 +152,33 @@ public class Server {
 
             return false;
         }
+        
+        private class InputReader implements Callable<List<String>> {
+
+			@Override
+			public List<String> call() throws Exception {
+        		String line;
+        		boolean running;
+        		List<String> request = new ArrayList<String>();
+                try {
+					while( ( line = in.readLine() ) != null && !line.equals( "." ) ) {
+					    if( line.equalsIgnoreCase( "exit" ) ) {
+					        System.out.println( "Client quitting" );
+					        running = false;
+
+					        return null;
+					    }
+
+					    request.add( line );
+					}
+				} catch( IOException ioe ) {
+	                System.err.println( "IOException on socket listen: " + ioe );
+	                ioe.printStackTrace();
+				} 
+                
+                return request;
+			}
+        }
 
         public void run() {
             String line;
@@ -160,21 +200,40 @@ public class Server {
                 /* Send ack */
                 out.println( version );
 
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                
                 boolean running = true;
                 while( running ) {
 
                     request.clear();
-                    while( ( line = in.readLine() ) != null && !line.equals( "." ) ) {
-                        if( line.equalsIgnoreCase( "exit" ) ) {
-                            System.out.println( "Client quitting" );
-                            running = false;
-                            break;
-                        }
 
-                        request.add( line );
+                    //FutureTask<List<String>> future = new FutureTask<List<String>>( new InputReader() );
+                    FutureTask<List<String>> task = new FutureTask<List<String>>( new InputReader() );
+                    
+                    executor.submit( task );
+                    
+
+                    int cnt   = 0;
+                    while( !task.isDone() ) {
+                    	try {
+							Thread.sleep( step );
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+                    	cnt += step;
+                    	if( cnt > limit ) {
+                    		throw new IOException( "Don't want to wait anymore" );
+                    	}
                     }
+                    
+                    try {
+						request = task.get();
+					} catch ( Exception e ) {
+						e.printStackTrace();
+					}
 
-                    if( !running || request.size() == 0 ) {
+                    if( !running || request == null || request.size() == 0 ) {
                         break;
                     }
 
@@ -187,7 +246,6 @@ public class Server {
 
             } catch( IOException ioe ) {
                 System.err.println( "IOException on socket listen: " + ioe );
-                ioe.printStackTrace();
             } finally {
                 try {
                     server.close();
