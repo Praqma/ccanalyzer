@@ -6,9 +6,12 @@ import java.io.PrintWriter;
 
 import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
+import net.praqma.util.debug.Logger;
 
 public class PerformanceClient extends AbstractClient {
 
+	private static Logger logger = Logger.getLogger();
+	
     public PerformanceClient( int port, String host, String clientName, MonKit mk ) {
         super( port, host, clientName, mk );
     }
@@ -17,7 +20,7 @@ public class PerformanceClient extends AbstractClient {
         
         String line = "";
         
-        System.out.println( "Obtaining Performance information" );
+        logger.info( "Obtaining Performance information" );
         
         /* Get the performance counters */
         for( PerformanceCounterConfiguration pc : counters.getPerformanceCounters( host ) ) {

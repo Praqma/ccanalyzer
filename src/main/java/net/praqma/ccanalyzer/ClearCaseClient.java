@@ -6,8 +6,11 @@ import java.io.PrintWriter;
 
 import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
+import net.praqma.util.debug.Logger;
 
 public class ClearCaseClient extends AbstractClient {
+	
+	private static Logger logger = Logger.getLogger();
 
     public ClearCaseClient( int port, String host, String clientName, MonKit mk ) {
         super( port, host, clientName, mk );
@@ -17,7 +20,7 @@ public class ClearCaseClient extends AbstractClient {
         
         String line = "";
         
-        System.out.println( "Obtaining ClearCase information" );
+        logger.info( "Obtaining ClearCase information" );
         
         /* Get the performance counters */
         for( ClearCaseCounterConfiguration ccc : counters.getClearCaseCounters() ) {

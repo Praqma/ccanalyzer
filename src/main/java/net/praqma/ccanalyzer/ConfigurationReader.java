@@ -10,11 +10,14 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 
+import net.praqma.util.debug.Logger;
 import net.praqma.util.xml.XML;
 
 public class ConfigurationReader extends XML implements Serializable {
 
     private static final long serialVersionUID = 3648821402865625037L;
+    
+    private static Logger logger = Logger.getLogger();
 
     //List<ClearCaseCounterConfiguration> ccounters = new ArrayList<ClearCaseCounterConfiguration>();
     //Map<String, Map<String, PerformanceCounterConfiguration>> config = new HashMap<String, Map<String, PerformanceCounterConfiguration>>();
@@ -160,6 +163,8 @@ public class ConfigurationReader extends XML implements Serializable {
                     
                     List<Element> he = getElements( e );
                     String host = e.getAttribute( "host" );
+                    
+                    logger.debug( "Specific host: " + host );
         
                     if( p.config.get( host ) == null ) {
                         //System.out.println( "Adding host " + host );
@@ -171,6 +176,8 @@ public class ConfigurationReader extends XML implements Serializable {
                         String name = hostCounter.getAttribute( "name" );
                         String scale = hostCounter.getAttribute( "scale" );
                         String counter = hostCounter.getTextContent();
+                        
+                        logger.debug( "Counter name: " + name );
             
                         String samples = hostCounter.getAttribute( "samples" );
                         int ns = 1;

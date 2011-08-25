@@ -9,8 +9,11 @@ import java.net.UnknownHostException;
 
 import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
+import net.praqma.util.debug.Logger;
 
 public abstract class AbstractClient {
+	
+	private static Logger logger = Logger.getLogger();
 
     protected int port;
     protected String host;
@@ -23,7 +26,7 @@ public abstract class AbstractClient {
         this.clientName = clientName;
         this.monkit = mk;
         
-        System.out.println( "CCAnalyzer client version " + Server.version );
+        logger.info( "CCAnalyzer client version " + Server.version );
     }
         
 
@@ -32,17 +35,17 @@ public abstract class AbstractClient {
         PrintWriter out = null;
         BufferedReader in = null;
         
-        System.out.print( "Trying to connect to " + host );
+        logger.info( "Trying to connect to " + host );
 
         try {
             socket = new Socket( host, port );
             out = new PrintWriter( socket.getOutputStream(), true );
 
         } catch( UnknownHostException e ) {
-            System.out.println( "\rError, unkown host " + host + "\n" );
+        	logger.warning( "\rError, unkown host " + host + "\n" );
             return;
         } catch( IOException e ) {
-            System.out.println( "\rError, unable to connect to " + host + "\n" );
+        	logger.warning( "\rError, unable to connect to " + host + "\n" );
             return;
         }
 
@@ -56,7 +59,7 @@ public abstract class AbstractClient {
             break;
         }
         if( !line.equals( Integer.toString( Server.version ) ) ) {
-            System.out.println( "\rError, version mismatch at " + host + "\n" );
+        	logger.warning( "\rError, version mismatch at " + host + "\n" );
             
             out.close();
             in.close();
@@ -65,7 +68,7 @@ public abstract class AbstractClient {
             throw new CCAnalyzerException( "Version mismatch, got " + line + " expected " + Server.version );
         }
         
-        System.out.println( "\rSuccessfully connected to " + host );
+        logger.info( "Successfully connected to " + host );
         
         /* Do the counting */
         perform( counters, out, in );
@@ -77,7 +80,7 @@ public abstract class AbstractClient {
 
         socket.close();
         
-        System.out.println( "Disconnected\n" );
+        logger.info( "Disconnected\n" );
     }
     
     protected abstract void perform( Configuration counters, PrintWriter out, BufferedReader in ) throws IOException;

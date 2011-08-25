@@ -7,11 +7,15 @@ import java.util.List;
 
 import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
+import net.praqma.util.debug.Logger;
+import net.praqma.util.debug.Logger.LogLevel;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
 
 public class Main {
 
+	private static Logger logger = Logger.getLogger();
+	
     /**
      * @param args
      * @throws IOException 
@@ -47,11 +51,19 @@ public class Main {
         o.setDescription( desc );
 
         o.parse( args );
+        
+        logger.toStdOut( true );
+        
+        if( o.isVerbose() ) {
+        	logger.setMinLogLevel( LogLevel.DEBUG );
+        } else {
+        	logger.setMinLogLevel( LogLevel.INFO );
+        }
 
         try {
             o.checkOptions();
         } catch( Exception e ) {
-            System.err.println( "Incorrect option: " + e.getMessage() );
+        	logger.error( "Incorrect option: " + e.getMessage() );
             o.display();
             System.exit( 1 );
         }
@@ -64,16 +76,16 @@ public class Main {
         List<String> hosts = null;
         List<String> names = null;
         if( ohost.isUsed() && oname.isUsed() ) {
-        	if( o.isVerbose() ) System.out.println("Using CLI defined hosts");
+        	if( o.isVerbose() ) logger.info("Using CLI defined hosts");
 	        hosts = ohost.getStrings();
 	        names = oname.getStrings();
 	
 	        if( hosts.size() != names.size() ) {
-	            System.err.println( "The number of hosts must the same as the number of names." );
+	        	logger.error( "The number of hosts must the same as the number of names." );
 	            System.exit( 1 );
 	        }
 	    } else {
-        	if( o.isVerbose() ) System.out.println("Using config defined hosts");
+        	if( o.isVerbose() ) logger.info("Using config defined hosts");
         	hosts = new ArrayList<String>();
         	names = new ArrayList<String>();
         }
@@ -83,7 +95,7 @@ public class Main {
         ConfigurationReader cr = null;
         
         if( oconf.isUsed() ) {
-        	if( o.isVerbose() ) System.out.println("Using configuration file " + oconf.getString());
+        	if( o.isVerbose() ) logger.info("Using configuration file " + oconf.getString());
             cr = new ConfigurationReader( new File( oconf.getString() ) );
         } else {
             cr = new ConfigurationReader( new File( "config.xml" ) );
@@ -95,7 +107,7 @@ public class Main {
         	if( oasit.isUsed() ) {
         		List<String> sites = cr.getSites();
         		confs = new Configuration[sites.size()];
-        		System.out.println( "Sites: " + cr.getSites() );
+        		logger.info( "Sites: " + cr.getSites() );
         		for( int i = 0 ; i < sites.size() ; i++ ) {
                 	hosts = new ArrayList<String>();
                 	names = new ArrayList<String>();
@@ -108,14 +120,14 @@ public class Main {
         		confs[0] = cr.getConfiguration( hosts, names, osite.getString() );
         	}
         } catch( CCAnalyzerException e ) {
-            System.err.println( "Could not initialize configuration: " + e.getMessage() );
+        	logger.error( "Could not initialize configuration: " + e.getMessage() );
             System.exit( 1 );
         }
         
         for( Configuration conf : confs ) {
 	        
         	if( conf.getSite() != null ) {
-        		System.out.println( "Site: " + conf.getSite() + "\n----------------" );
+        		logger.info( "Site: " + conf.getSite() + "\n" );
         	}
         	
 	        /* If any hosts defined to analyze */
@@ -126,7 +138,7 @@ public class Main {
 	        
 	                    c.start( conf );
 	                } catch( CCAnalyzerException e ) {
-	                    System.out.println( "Unable to connect to server: " + e.getMessage() );
+	                	logger.info( "Unable to connect to server: " + e.getMessage() );
 	                }
 	            }
 	        }
@@ -139,7 +151,7 @@ public class Main {
 	                
 	                c.start( conf );
 	            } catch( CCAnalyzerException e ) {
-	                System.out.println( "Unable to connect to server: " + e.getMessage() );
+	            	logger.info( "Unable to connect to server: " + e.getMessage() );
 	            }
 	        }
 
