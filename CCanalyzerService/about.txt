@@ -1,0 +1,5 @@
+Run setup.cmd to install CCanalyzer server on a ClearCase server.
+
+To uninstall, open command prompt and run cmd> "net stop "Praqma ClearCase Analyzer" 
+Then run cmd> "%ProgramFiles%\Praqma\CCanalyzer\CCanalyzerSvc.exe uninstall"
+
