@@ -2,7 +2,8 @@
 set CCanalyzerHome=%ProgramFiles%\Praqma\CCanalyzer
 
 IF EXIST "%CCanalyzerHome%" GOTO update
-mkdir %CCanalyzerHome%
+
+mkdir "%CCanalyzerHome%"
 @echo Installing
 goto install
 
@@ -10,19 +11,19 @@ goto install
 
 @echo Updating
 net stop CCAnalyzerSvc
-"%CCanalyzerHome%\CCAnalyzerSvc.exe" uninstall
+pushd "%CCanalyzerHome%"
+CCAnalyzerSvc.exe uninstall
+popd
 
 goto install
 
 :install
-
-xcopy "%~dp0CCAnalyzerSvc.exe" "%CCanalyzerHome%" /Y /R
-xcopy "%~dp0CCAnalyzerSvc.xml" "%CCanalyzerHome%" /Y /R
-xcopy "%~dp0ccanalyzer.jar" "%CCanalyzerHome%" /Y /R
-"%CCanalyzerHome%\CCAnalyzerSvc.exe" install
+pushd "%CCanalyzerHome%"
+xcopy "%~dp0CCAnalyzerSvc.exe" . /Y /R
+xcopy "%~dp0CCAnalyzerSvc.xml" . /Y /R
+xcopy "%~dp0ccanalyzer.jar" . /Y /R
+CCAnalyzerSvc.exe install
 net start CCAnalyzerSvc
+popd
 
 :end
-
-
-pause
