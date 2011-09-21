@@ -23,14 +23,14 @@ public class PerformanceClient extends AbstractClient {
         logger.info( "Obtaining Performance information" );
         
         /* Get the performance counters */
-        for( PerformanceCounterConfiguration pc : counters.getPerformanceCounters( host ) ) {
+        for( PerformanceCounterConfiguration pc : counters.getPerformanceCounters( clientName ) ) {
             out.println( PerformanceCounterMeter.RequestType.NAMED_COUNTER.toString() );
             out.println( pc.counter );
             out.println( pc.numberOfSamples );
             out.println( pc.intervalTime );
             out.println( "." );
             
-            System.out.print( "* " + pc.name + ": " );
+            System.out.print( "* " + pc.host + ": " );
 
             while( ( line = in.readLine() ) != null ) {
                 break;
@@ -38,9 +38,9 @@ public class PerformanceClient extends AbstractClient {
 
             System.out.println( line + " " + pc.scale );
 
-            monkit.addCategory( pc.name, pc.scale );
+            monkit.addCategory( pc.host, pc.scale );
 
-            monkit.add( this.clientName, line, pc.name );
+            monkit.add( this.clientName, line, pc.host );
         }
     }
     

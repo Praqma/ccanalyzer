@@ -1,8 +1,33 @@
 <config>
-	<!-- ClearCase is on the form \clearcase(<modifier>)\<function> 
-	     The function is case sensitive!
-	-->
-	<clearcase>
-		<counter name="Number of views" scale="number">\clearcase(triggertest)\NumberOfViewsssss</counter>
-	</clearcase>
+  <hosts>
+    <host name="m1">ccdev04.cclab.praqma.net</host>
+    <host name="m2">ccdev03.cclab.praqma.net</host>
+  </hosts>
+
+  <sites>
+    <site name="all" clearcase="m1" regions="Admin">
+      <host>m1</host>
+      <host>m2</host>
+    </site>
+  </sites>
+  
+  <clearcase>
+    <counter name="Number of vobs" scale="number">\clearcase(*)\NumberOfVobs</counter>
+    <counter name="Number of views" scale="number">\clearcase(*)\NumberOfViews</counter>
+    <counter name="Number of stranded vobs" scale="number">\clearcase()\NumberOfStrandedVobs</counter>
+  </clearcase>
+
+  <performance>
+    <general>
+      <counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available mbytes</counter>
+      <counter samples="1" interval="1" name="Free space" scale="Percentage">\LogicalDisk(C:)\% Free Space</counter>
+      <counter samples="3" interval="1" name="Processor time" scale="seconds">\Processor(_Total)\% privileged time</counter>
+    </general>
+    
+    <specific>
+      <host name="m1">
+	<counter samples="1" interval="1" name="Free megabytes" scale="MegaBytes">\\CCDEV04\LogicalDisk(C:)\Free Megabytes</counter>
+      </host>
+    </specific>
+  </performance>
 </config>

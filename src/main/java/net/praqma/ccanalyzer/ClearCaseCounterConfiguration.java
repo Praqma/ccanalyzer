@@ -16,6 +16,13 @@ public class ClearCaseCounterConfiguration implements Serializable {
         this.counter = ClearCaseCounter.fromString( counter );
     }
     
+    public ClearCaseCounterConfiguration( String name, String scale, String counter, String region ) {
+        this.name = name;
+        this.scale = scale;
+        counter = counter.replace( "(*)", "(" + region + ")" );
+        this.counter = ClearCaseCounter.fromString( counter );
+    }
+    
     public String getName() {
         return name;
     }
@@ -26,5 +33,9 @@ public class ClearCaseCounterConfiguration implements Serializable {
 
     public ClearCaseCounter getCounter() {
         return counter;
+    }
+    
+    public String toString() {
+    	return name + ": " + counter.getCounter();
     }
 }

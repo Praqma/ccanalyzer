@@ -22,11 +22,11 @@ public class ConfigurationRunner {
 
             String result = PerformanceCounterMeter.parseRequest( pc );
 
-            System.out.println( pc.name + ": " + result + " " + pc.scale );
+            System.out.println( pc.host + ": " + result + " " + pc.scale );
 
-            mk.addCategory( pc.name, pc.scale );
+            mk.addCategory( pc.host, pc.scale );
 
-            mk.add( caption, result, pc.name );
+            mk.add( caption, result, pc.host );
         }
     }
 }

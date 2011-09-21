@@ -44,6 +44,11 @@ public class ClearCaseCounter {
         return counter;
     }
     
+    public String getCounter( String region ) {
+    	return counter.replace( "(*)", "(" + region + ")" );
+    	
+    }
+    
     public String toString() {
         return function + "/" + modifier;
     }

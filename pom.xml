@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.praqma</groupId>
 	<artifactId>ccanalyzer</artifactId>
-	<version>0.2.2-SNAPSHOT</version>
+	<version>0.2.3-SNAPSHOT</version>
 	<name>ClearCase Analyzer</name>
 	<url>http://maven.apache.org</url>
 
@@ -88,13 +88,13 @@
 		<dependency>
 			<groupId>net.praqma</groupId>
 			<artifactId>COOL</artifactId>
-			<version>0.3.27</version>
+			<version>0.3.32-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.praqma</groupId>
 			<artifactId>praqmajutils</artifactId>
-			<version>0.1.11-SNAPSHOT</version>
+			<version>0.1.13-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

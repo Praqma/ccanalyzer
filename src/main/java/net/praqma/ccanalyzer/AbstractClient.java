@@ -21,6 +21,7 @@ public abstract class AbstractClient {
     protected MonKit monkit;
     
     public AbstractClient( int port, String host, String clientName, MonKit mk ) {
+    	logger.debug( "HOST: " + host + ". CLIENT: " + clientName );
         this.port = port;
         this.host = host;
         this.clientName = clientName;
@@ -42,10 +43,10 @@ public abstract class AbstractClient {
             out = new PrintWriter( socket.getOutputStream(), true );
 
         } catch( UnknownHostException e ) {
-        	logger.warning( "\rError, unkown host " + host + "\n" );
+        	logger.warning( "Error, unkown host " + host );
             return;
         } catch( IOException e ) {
-        	logger.warning( "\rError, unable to connect to " + host + "\n" );
+        	logger.warning( "Error, unable to connect to " + host );
             return;
         }
 

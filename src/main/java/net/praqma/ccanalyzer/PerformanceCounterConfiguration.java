@@ -6,7 +6,7 @@ public class PerformanceCounterConfiguration implements Serializable {
 
     private static final long serialVersionUID = -1811413449246591974L;
 
-    public String name;
+    public String host;
     public String scale;
     public String counter;
     public int numberOfSamples = 1;
@@ -20,8 +20,8 @@ public class PerformanceCounterConfiguration implements Serializable {
         FIRST
     }
 
-    public PerformanceCounterConfiguration( String name, String scale, String counter, int numberOfSamples, int intervalTime, AggregateFunction function ) {
-        this.name = name;
+    public PerformanceCounterConfiguration( String host, String scale, String counter, int numberOfSamples, int intervalTime, AggregateFunction function ) {
+        this.host = host;
         this.scale = scale;
         this.counter = counter;
         this.numberOfSamples = numberOfSamples;
@@ -29,8 +29,8 @@ public class PerformanceCounterConfiguration implements Serializable {
         this.function = function;
     }
 
-    public PerformanceCounterConfiguration( String name, String scale, String counter, int numberOfSamples, int intervalTime ) {
-        this.name = name;
+    public PerformanceCounterConfiguration( String host, String scale, String counter, int numberOfSamples, int intervalTime ) {
+        this.host = host;
         this.scale = scale;
         this.counter = counter;
         this.numberOfSamples = numberOfSamples;
@@ -38,6 +38,6 @@ public class PerformanceCounterConfiguration implements Serializable {
     }
     
     public String toString() {
-        return name + "(" + counter + ")";
+        return host + "(" + counter + ")";
     }
 }
