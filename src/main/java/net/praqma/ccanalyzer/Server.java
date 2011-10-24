@@ -26,9 +26,9 @@ public class Server {
 
     public static int defaultPort = 44444;
     
-    private int counter = 0;
+    private static int counter = 0;
     public static int version = 4;
-    public static String textualVersion = "0.2.2";
+    public static String textualVersion = "0.2.3";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
     
@@ -40,7 +40,8 @@ public class Server {
         public void run() {
         	long now = Calendar.getInstance().getTimeInMillis();
         	long diff = now - live;
-            System.out.println("Server terminated. Time live: " + Time.longToTime( diff ) );
+        	diff = 121000;
+            System.out.println("Server terminated after serving " + counter + " client" + ( counter == 1 ? "" : "s" ) + ". Time live: " + Time.longToTime( diff ) );
         }
     }
 
@@ -59,6 +60,8 @@ public class Server {
         o.setDescription( "" );
 
         o.parse( args );
+        
+        Thread.currentThread().setName( "ClearCase-Analyzer-Server-v" + Server.textualVersion );
 
         try {
             o.checkOptions();
@@ -167,8 +170,7 @@ public class Server {
 					    request.add( line );
 					}
 				} catch( IOException ioe ) {
-	                System.err.println( "IOException on socket listen: " + ioe );
-	                ioe.printStackTrace();
+	                System.err.println( "I was interrupted: " + ioe );
 				} 
                 
                 return request;
@@ -208,7 +210,7 @@ public class Server {
                     executor.submit( task );
                     
 
-                    int cnt   = 0;
+                    int cnt = 0;
                     while( !task.isDone() ) {
                     	try {
 							Thread.sleep( step );
@@ -218,8 +220,21 @@ public class Server {
 
                     	cnt += step;
                     	if( cnt > limit ) {
-                    		throw new IOException( "Don't want to wait anymore" );
+                    		if( executor.shutdownNow().size() > 0 ) {
+                    			System.out.println( "More than zero!!!" );
+                    		}
+                    		if( !task.cancel( true ) ) {
+                    			System.err.println( "Could not cancel task" );
+                    		}
+                    		
+                    		//throw new IOException( "Don't want to wait anymore" );
+                    		running = false;
+                    		break;
                     	}
+                    }
+                    
+                    if( !running ) {
+                        break;
                     }
                     
                     try {

@@ -88,13 +88,13 @@
 		<dependency>
 			<groupId>net.praqma</groupId>
 			<artifactId>COOL</artifactId>
-			<version>0.3.32-SNAPSHOT</version>
+			<version>0.3.35-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.praqma</groupId>
 			<artifactId>praqmajutils</artifactId>
-			<version>0.1.13-SNAPSHOT</version>
+			<version>0.1.15-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

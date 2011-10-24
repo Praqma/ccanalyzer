@@ -39,6 +39,7 @@ public class Main {
         
         Option oview = new Option( "view", "w", false, 0, "View the configuration" );
         
+        app.setTemplate( "[%level]%space %message%newline" );
         Logger.addAppender( app );
 
         o.setOption( ohost );
