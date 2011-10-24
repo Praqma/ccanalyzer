@@ -36,11 +36,16 @@ public class PerformanceClient extends AbstractClient {
                 break;
             }
 
-            System.out.println( line + " " + pc.scale );
-
-            monkit.addCategory( pc.host, pc.scale );
-
-            monkit.add( this.clientName, line, pc.host );
+            /* Error result */
+            if( line == null || line.length() == 0 ) {
+                System.err.println( "Erroneous result" );
+            } else {
+	            System.out.println( line + " " + pc.scale );
+	
+	            monkit.addCategory( pc.host, pc.scale );
+	
+	            monkit.add( this.clientName, line, pc.host );
+            }
         }
     }
     
