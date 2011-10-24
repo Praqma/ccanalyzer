@@ -27,8 +27,8 @@ public class Server {
     public static int defaultPort = 44444;
     
     private static int counter = 0;
-    public static int version = 4;
-    public static String textualVersion = "0.2.3";
+    public static int version = 5;
+    public static String textualVersion = "0.2.4";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
     
@@ -40,7 +40,6 @@ public class Server {
         public void run() {
         	long now = Calendar.getInstance().getTimeInMillis();
         	long diff = now - live;
-        	diff = 121000;
             System.out.println("Server terminated after serving " + counter + " client" + ( counter == 1 ? "" : "s" ) + ". Time live: " + Time.longToTime( diff ) );
         }
     }
@@ -61,7 +60,7 @@ public class Server {
 
         o.parse( args );
         
-        Thread.currentThread().setName( "ClearCase-Analyzer-Server-v" + Server.textualVersion );
+        Thread.currentThread().setName( "ClearCase Analyzer Server v" + Server.textualVersion );
 
         try {
             o.checkOptions();
