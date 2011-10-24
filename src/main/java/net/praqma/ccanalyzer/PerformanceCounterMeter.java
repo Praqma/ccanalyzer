@@ -103,12 +103,18 @@ public class PerformanceCounterMeter {
                 fun = AggregateFunction.valueOf( request.get( 4 ) );
             }
 
-            List<String> r = get( request.get( 1 ), numberOfSamples, intervalTime );
-            if( r.size() == 1 ) {
-                return r.get( 0 );
-            } else if( r.size() > 1 ) {
-                return getResult( r, fun );
+            /* This could potentially cause an exception */
+            try {
+	            List<String> r = get( request.get( 1 ), numberOfSamples, intervalTime );
+	            if( r.size() == 1 ) {
+	                return r.get( 0 );
+	            } else if( r.size() > 1 ) {
+	                return getResult( r, fun );
+	            }
+            } catch( Exception e ) {
+            	return "";
             }
+            
             break;
 
         case SHORT_HAND_COUNTER:

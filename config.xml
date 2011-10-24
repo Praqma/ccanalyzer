@@ -19,7 +19,7 @@
 
   <performance>
     <general>
-      <counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available mbytes</counter>
+      <counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available 1mbytes</counter>
       <counter samples="1" interval="1" name="Free space" scale="Percentage">\LogicalDisk(C:)\% Free Space</counter>
       <counter samples="3" interval="1" name="Processor time" scale="seconds">\Processor(_Total)\% privileged time</counter>
     </general>
