@@ -18,7 +18,7 @@ public class Main {
 
 	private static Logger logger = Logger.getLogger();
 	//private static StreamAppender app = new StreamAppender( System.out );
-	private static ConsoleAppender app = new ConsoleAppender();
+	//private static ConsoleAppender app = new ConsoleAppender();
 	
     /**
      * @param args
@@ -39,8 +39,8 @@ public class Main {
         
         Option oview = new Option( "view", "w", false, 0, "View the configuration" );
         
-        app.setTemplate( "[%level]%space %message%newline" );
-        Logger.addAppender( app );
+        //app.setTemplate( "[%level]%space %message%newline" );
+        //Logger.addAppender( app );
 
         o.setOption( ohost );
         o.setOption( oname );
@@ -70,11 +70,13 @@ public class Main {
             System.exit( 1 );
         }
         
+        /*
         if( o.isVerbose() ) {
         	app.setMinimumLevel( LogLevel.DEBUG );
         } else {
         	app.setMinimumLevel( LogLevel.INFO );
         }
+        */
         
         Integer port = Server.defaultPort;
         if( oport.isUsed() ) {

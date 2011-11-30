@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.praqma.ccanalyzer.PerformanceCounterConfiguration.AggregateFunction;
+import net.praqma.util.debug.Logger;
 import net.praqma.util.execute.AbnormalProcessTerminationException;
 import net.praqma.util.execute.CmdResult;
 import net.praqma.util.execute.CommandLine;
@@ -17,6 +18,8 @@ public class PerformanceCounterMeter {
     private static int timeInterval = 1; // Seconds
 
     private static Pattern rx_ = Pattern.compile( "^\\\"(.*?)\\\",\\\"(.*?)\\\"$" );
+    
+    private static Logger logger = Logger.getLogger();
 
     public enum RequestType {
         NAMED_COUNTER, 
@@ -69,23 +72,23 @@ public class PerformanceCounterMeter {
             /* Is ClearCase!? */
             ClearCaseCounter ccc = ClearCaseCounter.fromString( request.get( 1 ) );
             if( ccc != null ) {
-                System.out.println( " $" + request.get( 1 ) );
+            	logger.verbose( " $" + request.get( 1 ) );
                 
                 try {
                     Class clazz = Class.forName( "net.praqma.ccanalyzer.clearcase." + ccc.getFunction() );
                     ClearCaseFunction instance = (ClearCaseFunction) clazz.newInstance();
                     return instance.perform( ccc );
                 } catch( ClassNotFoundException e ) {
-                    System.err.println( "The requested class " + ccc.getFunction() + " was not found" );
+                    logger.error( "The requested class " + ccc.getFunction() + " was not found" );
                     return "";
                 } catch( InstantiationException e ) {
-                    System.err.println( "Could not instantiate " + ccc.getFunction() );
+                	logger.error( "Could not instantiate " + ccc.getFunction() );
                     return "";
                 } catch( IllegalAccessException e ) {
-                    System.err.println( "Could not get access to instantiate " + ccc.getFunction() );
+                	logger.error( "Could not get access to instantiate " + ccc.getFunction() );
                     return "";
                 } catch( IOException e ) {
-                    System.err.println( "Failed to execute " + ccc.getFunction() + ": " + e.getMessage() );
+                	logger.error( "Failed to execute " + ccc.getFunction() + ": " + e.getMessage() );
                     return "";
 				}
             }
