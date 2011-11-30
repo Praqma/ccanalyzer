@@ -1,5 +1,6 @@
 package net.praqma.ccanalyzer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -83,7 +84,10 @@ public class PerformanceCounterMeter {
                 } catch( IllegalAccessException e ) {
                     System.err.println( "Could not get access to instantiate " + ccc.getFunction() );
                     return "";
-                }
+                } catch( IOException e ) {
+                    System.err.println( "Failed to execute " + ccc.getFunction() + ": " + e.getMessage() );
+                    return "";
+				}
             }
 
             AggregateFunction fun = AggregateFunction.NUMERICAL_AVERAGE;
