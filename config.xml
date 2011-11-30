@@ -5,7 +5,7 @@
   </hosts>
 
   <sites>
-    <site name="all" clearcase="m1" regions="Admin">
+    <site name="all" clearcase="m2" regions="Admin">
       <host>m1</host>
       <host>m2</host>
     </site>
@@ -15,11 +15,12 @@
     <counter name="Number of vobs" scale="number">\clearcase(*)\NumberOfVobs</counter>
     <counter name="Number of views" scale="number">\clearcase(*)\NumberOfViews</counter>
     <counter name="Number of stranded vobs" scale="number">\clearcase()\NumberOfStrandedVobs</counter>
+    <counter name="Number of stranded vobs" scale="number">\clearcase()\PingDefaultGateway</counter>
   </clearcase>
 
   <performance>
     <general>
-      <counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available 1mbytes</counter>
+      <counter samples="1" interval="1" name="Memory available" scale="Mega bytes">\Memory\available mbytes</counter>
       <counter samples="1" interval="1" name="Free space" scale="Percentage">\LogicalDisk(C:)\% Free Space</counter>
       <counter samples="3" interval="1" name="Processor time" scale="seconds">\Processor(_Total)\% privileged time</counter>
     </general>

@@ -1,6 +1,7 @@
 package net.praqma.ccanalyzer;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -18,16 +19,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+import net.praqma.util.debug.Logger;
+import net.praqma.util.debug.Logger.LogLevel;
+import net.praqma.util.debug.appenders.FileAppender;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
 import net.praqma.util.time.Time;
 
 public class Server {
+	
+	private static Logger logger = Logger.getLogger();
 
     public static int defaultPort = 44444;
     
     private static int counter = 0;
-    public static int version = 5;
+    public static int version = 6;
     public static String textualVersion = "0.2.4";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
@@ -44,7 +50,7 @@ public class Server {
         }
     }
 
-    public static void main( String[] args ) {
+    public static void main( String[] args ) throws IOException {
 
         Options o = new Options( Server.textualVersion );
 
@@ -52,7 +58,21 @@ public class Server {
 
         o.setOption( oport );
 
+        FileAppender app = new FileAppender( new File( "ccanalyzer.log" ) );
+        app.setTemplate( "[%level]%space %message%newline" );
+        Logger.addAppender( app );
+        
         o.setDefaultOptions();
+        
+        o.parse( args );
+        
+        if( o.isVerbose() ) {
+        	app.setMinimumLevel( LogLevel.VERBOSE );
+        } else {
+        	app.setMinimumLevel( LogLevel.INFO );
+        }
+        
+        app.setMinimumLevel( LogLevel.DEBUG );
 
         o.setSyntax( "" );
         o.setHeader( "" );
