@@ -4,24 +4,14 @@ import java.util.List;
 
 import net.praqma.clearcase.Cool;
 import net.praqma.clearcase.Vob;
-import net.praqma.clearcase.Cool.ContextType;
+import net.praqma.clearcase.exceptions.CleartoolException;
 import net.praqma.clearcase.ucm.view.UCMView;
 import net.praqma.clearcase.Region;
 import net.praqma.monkit.MonKit;
-import net.praqma.util.debug.PraqmaLogger;
-import net.praqma.util.debug.PraqmaLogger.Logger;
 
 public class ClearCaseAnalyzer {
-    
-    static {
-        Cool.setContext( ContextType.CLEARTOOL );
 
-        Logger logger = PraqmaLogger.getLogger();
-        logger.subscribeAll();
-        Cool.setLogger( logger );
-    }
-
-    public static void getVobs( List<Region> regions, MonKit mk ) {
+    public static void getVobs( List<Region> regions, MonKit mk ) throws CleartoolException {
 
         mk.addCategory( "vobs", "number" );
 
@@ -32,7 +22,7 @@ public class ClearCaseAnalyzer {
         }
     }
 
-    public static void getViews( List<Region> regions, MonKit mk ) {
+    public static void getViews( List<Region> regions, MonKit mk ) throws CleartoolException {
 
         mk.addCategory( "views", "number" );
 

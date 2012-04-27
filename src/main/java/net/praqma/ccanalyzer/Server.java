@@ -22,19 +22,20 @@ import java.util.regex.Pattern;
 import net.praqma.util.debug.Logger;
 import net.praqma.util.debug.Logger.LogLevel;
 import net.praqma.util.debug.appenders.FileAppender;
+import net.praqma.util.option.CLI;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
 import net.praqma.util.time.Time;
 
-public class Server {
+public class Server implements CLI {
 	
 	private static Logger logger = Logger.getLogger();
 
     public static int defaultPort = 44444;
     
     private static int counter = 0;
-    public static int version = 6;
-    public static String textualVersion = "0.2.4";
+    public static int version = 7;
+    public static String textualVersion = "0.3.0";
 
     private static Pattern rx_version = Pattern.compile( "^version (\\d+)" );
     
@@ -51,6 +52,10 @@ public class Server {
     }
 
     public static void main( String[] args ) throws IOException {
+    	new Server().perform( args );
+    }
+    	
+    public void perform( String[] args ) throws IOException {
 
         Options o = new Options( Server.textualVersion );
 

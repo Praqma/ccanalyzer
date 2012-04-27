@@ -7,6 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.praqma.ccanalyzer.PerformanceCounterConfiguration.AggregateFunction;
+import net.praqma.clearcase.exceptions.ClearCaseException;
+import net.praqma.clearcase.util.ExceptionUtils;
 import net.praqma.util.debug.Logger;
 import net.praqma.util.execute.AbnormalProcessTerminationException;
 import net.praqma.util.execute.CmdResult;
@@ -89,6 +91,10 @@ public class PerformanceCounterMeter {
                     return "";
                 } catch( IOException e ) {
                 	logger.error( "Failed to execute " + ccc.getFunction() + ": " + e.getMessage() );
+                    return "";
+				} catch( ClearCaseException e ) {
+                	logger.error( e.getMessage() );
+                	ExceptionUtils.log( e, true );
                     return "";
 				}
             }
