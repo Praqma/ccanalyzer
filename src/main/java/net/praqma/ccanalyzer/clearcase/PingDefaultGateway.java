@@ -1,7 +1,6 @@
 package net.praqma.ccanalyzer.clearcase;
 
 import java.io.IOException;
-
 import net.praqma.ccanalyzer.ClearCaseCounter;
 import net.praqma.ccanalyzer.ClearCaseFunction;
 import net.praqma.util.net.Net;

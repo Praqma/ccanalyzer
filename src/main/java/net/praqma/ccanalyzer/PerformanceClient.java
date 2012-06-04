@@ -3,7 +3,6 @@ package net.praqma.ccanalyzer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
 import net.praqma.util.debug.Logger;
