@@ -9,8 +9,6 @@ import java.util.Set;
 import net.praqma.ccanalyzer.ConfigurationReader.Configuration;
 import net.praqma.monkit.MonKit;
 import net.praqma.util.debug.Logger;
-import net.praqma.util.debug.Logger.LogLevel;
-import net.praqma.util.debug.appenders.ConsoleAppender;
 import net.praqma.util.option.CLI;
 import net.praqma.util.option.Option;
 import net.praqma.util.option.Options;
@@ -18,9 +16,6 @@ import net.praqma.util.option.Options;
 public class Client implements CLI {
 
 	private static Logger logger = Logger.getLogger();
-	//private static StreamAppender app = new StreamAppender( System.out );
-	//private static ConsoleAppender app = new ConsoleAppender();
-	
     /**
      * @param args
      * @throws IOException 

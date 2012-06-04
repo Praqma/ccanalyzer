@@ -153,14 +153,14 @@ public class PerformanceCounterMeter {
     public static String getResult( List<String> values, AggregateFunction fun ) {
         switch( fun ) {
         case NUMERICAL_AVERAGE:
-            Float avg = 0.0f;
+            Double avg = 0.0d;
             int total = 0;
             for( String v : values ) {
-                avg += new Float( v );
+                avg += new Double( v );
                 total++;
             }
 
-            return new Float( ( avg / total ) ).toString();
+            return new Double( ( avg / total ) ).toString();
         }
 
         return null;

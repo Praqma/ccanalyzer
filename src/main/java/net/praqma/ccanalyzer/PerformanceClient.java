@@ -15,7 +15,8 @@ public class PerformanceClient extends AbstractClient {
     public PerformanceClient( int port, String host, String clientName, MonKit mk ) {
         super( port, host, clientName, mk );
     }
-
+    
+    @Override
     protected void perform( Configuration counters, PrintWriter out, BufferedReader in ) throws IOException {
         
         String line = "";

@@ -53,7 +53,7 @@ public class ConfigurationReader extends XML implements Serializable {
     	Map<String, String> hostsmap = new HashMap<String, String>();
     	
         /* Not given, find the config hosts */
-        if( hosts.size() == 0 ) {
+        if( hosts.isEmpty()) {
     		Element ehs = null;
     		try {
     			ehs = getFirstElement( "hosts" );
@@ -86,7 +86,7 @@ public class ConfigurationReader extends XML implements Serializable {
 			}
 			
 	        List<Element> esitesList = getElementsWithAttribute( esites, "name", site );
-	        if( esitesList.size() == 0 ) {
+	        if( esitesList.isEmpty()) {
 	        	throw new CCAnalyzerException( "Unkown site " + site );
 	        }
 	        
@@ -249,8 +249,6 @@ public class ConfigurationReader extends XML implements Serializable {
         // hostname, []
         Map<String, Map<String, PerformanceCounterConfiguration>> config = new HashMap<String, Map<String, PerformanceCounterConfiguration>>();
         
-        //List<String> hosts = new ArrayList<String>();
-        //List<String> names = new ArrayList<String>();
         
         Map<String, String> hostsmap = new HashMap<String, String>();
         List<String> regions = new ArrayList<String>();
@@ -271,16 +269,6 @@ public class ConfigurationReader extends XML implements Serializable {
         public List<ClearCaseCounterConfiguration> getClearCaseCounters() {
             return ccounters;
         }
-        
-        /*
-        public List<String> getHosts() {
-        	return hosts;
-        }
-        
-        public List<String> getNames() {
-        	return names;
-        }
-        */
         
         public void addRegion( String region ) {
         	regions.add( region );
@@ -306,14 +294,15 @@ public class ConfigurationReader extends XML implements Serializable {
         	return site;
         }
         
+        @Override
         public String toString() {
-        	StringBuffer sb = new StringBuffer();
+        	StringBuilder sb = new StringBuilder();
         	
         	sb.append( "Listing configuration" + "\n" );
 
         	sb.append( "ClearCase Counters:\n" );
         	for( ClearCaseCounterConfiguration c : ccounters ) {
-        		sb.append( c.toString() + "\n" );
+        		sb.append( c.toString()).append("\n");
         	}
         	
         	sb.append( "Performance Counters:\n" );
@@ -321,7 +310,7 @@ public class ConfigurationReader extends XML implements Serializable {
         	Set<String> hostNames = hostsmap.keySet();
         	for( String hostName : hostNames ) {
         		for( PerformanceCounterConfiguration c : getPerformanceCounters( hostName ) ) {
-        			sb.append( c.toString() + "\n" );
+        			sb.append( c.toString()).append("\n");
         		}
         	}
         	

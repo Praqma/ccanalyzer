@@ -37,6 +37,7 @@ public class PerformanceCounterConfiguration implements Serializable {
         this.intervalTime = intervalTime;
     }
     
+    @Override
     public String toString() {
         return host + "(" + counter + ")";
     }
