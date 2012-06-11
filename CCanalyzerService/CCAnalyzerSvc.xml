@@ -28,13 +28,13 @@ THE SOFTWARE.
   To uninstall, open command prompt and run cmd> "net stop "Praqma ClearCase Analyzer" 
   Then run cmd> "%ProgramFiles%\Praqma\CCanalyzer\CCAnalyzerSvc.exe uninstall"
 -->
-
+<!-- net.praqma.ccanalyzer.Server -->
 <service>
   <id>ccanalyzersvc</id>
   <name>Praqma ClearCase Analyzer</name>
   <description>The service that communicates ClearCase and process status on request.</description>
   <executable>java</executable>
-  <arguments> -Xrs -Xmx256m -classpath "%ProgramFiles%\Praqma\CCanalyzer\ccanalyzer.jar" net.praqma.ccanalyzer.Server</arguments>
+  <arguments> -Xrs -Xmx256m -jar "%ProgramFiles%\Praqma\CCanalyzer\ccanalyzer.jar" Server</arguments>
 </service>
 
 
